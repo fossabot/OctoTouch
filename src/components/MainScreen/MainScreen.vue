@@ -12,7 +12,7 @@
         200°C / 59°C
       </v-col>
       <v-col class="main-menu__header-item" align="end">
-        operational
+        operatio
       </v-col>
     </v-row>
     <v-row class="main-menu__row" align="center" justify="center">
