@@ -19,17 +19,17 @@
       <v-col :sm="5" class="control__directional-pad">
         <v-row style="height: 107px">
           <v-col></v-col>
-          <v-col v-ripple @click="jog('x', 10)" ><v-icon style="margin-top: 5px;" size=20vh color=#fff>mdi-arrow-up-thick</v-icon></v-col>
+          <v-col v-ripple @click="jog('y', 10)" ><v-icon style="margin-top: 5px;" size=20vh color=#fff>mdi-arrow-up-thick</v-icon></v-col>
           <v-col></v-col>
         </v-row>
         <v-row style="height: 107px">
-          <v-col @click="jog('y', -10)" v-ripple><v-icon size=20vh color=#fff>mdi-arrow-left-thick</v-icon></v-col>
+          <v-col @click="jog('x', -10)" v-ripple><v-icon size=20vh color=#fff>mdi-arrow-left-thick</v-icon></v-col>
           <v-col @click="action('home')" v-ripple><v-icon style="margin: auto; top: 15%;" size=14vh color=#fff>mdi-home</v-icon></v-col>
-          <v-col @click="jog('y', 10)" v-ripple><v-icon size=20vh color=#fff>mdi-arrow-right-thick</v-icon></v-col>
+          <v-col @click="jog('x', 10)" v-ripple><v-icon size=20vh color=#fff>mdi-arrow-right-thick</v-icon></v-col>
         </v-row>
         <v-row style="height: 107px">
           <v-col></v-col>
-          <v-col @click="jog('x', -10)" v-ripple><v-icon style="margin-bottom: 5px;" size=20vh color=#fff>mdi-arrow-down-thick</v-icon></v-col>
+          <v-col @click="jog('y', -10)" v-ripple><v-icon style="margin-bottom: 5px;" size=20vh color=#fff>mdi-arrow-down-thick</v-icon></v-col>
           <v-col></v-col>
         </v-row>
         <v-row style="height: 107px">
@@ -60,13 +60,13 @@
           <v-col></v-col>
         </v-row>
       </v-col>
-      <v-col :sm="4" style="margin-top: 6vh; padding-right: 5vw;">
+      <v-col :sm="4" style="margin-top: 3vh; padding-right: 5vw;">
         <div class="control__detail-item">
           <v-row v-ripple @click="overlay = 'tempAdjust-hotend'">
             <v-col :sm="4">
-              <v-icon size=10vh color=#ff7675>mdi-printer-3d-nozzle</v-icon>
+              <v-icon size=15vh color=#ff7675>mdi-printer-3d-nozzle</v-icon>
             </v-col>
-            <v-col>
+            <v-col style="margin-top: 2vh;">
               <span class="control__detail-text">{{Math.round(printer.nozzle.actual)}}°C</span><br>
               <span class="control__detail-text-small">{{printer.nozzle.target}}°C</span>
             </v-col>
@@ -75,9 +75,9 @@
         <div class="control__detail-item">
           <v-row v-ripple @click="overlay = 'tempAdjust-heatedbed'">
             <v-col :sm="4">
-              <v-icon size=10vh color=#00b894>mdi-radiator</v-icon>
+              <v-icon size=15vh color=#00b894>mdi-radiator</v-icon>
             </v-col>
-            <v-col>
+            <v-col style="margin-top: 2vh;">
               <span class="control__detail-text">{{Math.round(printer.bed.actual)}}°C</span><br>
               <span class="control__detail-text-small">{{printer.bed.target}}°C</span>
             </v-col>
@@ -86,9 +86,9 @@
         <div class="control__detail-item">
           <v-row>
             <v-col :sm="4">
-              <v-icon size=10vh :class="spinning" color=#0984e3>mdi-fan</v-icon>
+              <v-icon size=15vh :class="spinning" color=#0984e3>mdi-fan</v-icon>
             </v-col>
-            <v-col>
+            <v-col style="margin-top: 3vh;">
               <span class="control__detail-text" style="margin-top: 7px;">{{Math.round(printer.fan.speed)}}%</span>
             </v-col>
           </v-row>

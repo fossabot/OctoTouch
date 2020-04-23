@@ -38,25 +38,25 @@
     <!-- Printing screen, links to UTILITIES, CANCEL, PAUSE -->
     <div class="now-printing__details" v-if="screen == 'printing'">
       <v-row class="now-printing__overview">
-        <v-col class="now-printing__overview-item">
+        <v-col v-ripple @click='overlay="tempAdjust-hotend"' class="now-printing__overview-item">
           <v-row>
             <v-col>
               <v-icon size=15vh color=#ff7675>mdi-printer-3d-nozzle</v-icon>
             </v-col>
             <v-col>
-              <span class="now-printing__overview-text">{{Math.round(printer.nozzle.actual)}}°C</span><br>
+              <span class="now-printing__overview-text">{{Math.round(printer.nozzle.actual)}}<span style="font-size:20px;">°C</span></span><br>
               <span class="now-printing__overview-text-small">{{printer.nozzle.target}}°C</span>
             </v-col>
           </v-row>
         </v-col>
-        <v-col class="now-printing__overview-item">
+        <v-col v-ripple @click='overlay="tempAdjust-heatedbed"' class="now-printing__overview-item">
           <v-row>
             <v-col>
               <v-icon size=15vh color=#00b894>mdi-radiator</v-icon>
             </v-col>
             <v-col>
-              <span class="now-printing__overview-text">{{Math.round(printer.bed.actual)}}°C</span><br>
-              <span class="now-printing__overview-text-small">{{printer.bed.target}}°C</span>
+              <span class="now-printing__overview-text">{{Math.round(printer.bed.actual)}}<span style="font-size:20px;">°C</span></span><br><br>
+              <span class="now-printing__overview-text-small" style="margin-top: -15px">{{printer.bed.target}}°C</span>
             </v-col>
           </v-row>
         </v-col>
@@ -66,18 +66,18 @@
               <v-icon size=15vh :class="spinning" color=#0984e3 spin>mdi-fan</v-icon>
             </v-col>
             <v-col>
-              <span style="margin-top: 2.5vh;" class="now-printing__overview-text">{{printer.fan.speed}}%</span>
+              <span style="margin-top: 2.5vh;" class="now-printing__overview-text">{{printer.fan.speed}}<span style="font-size:20px;">%</span></span>
             </v-col>
           </v-row>
         </v-col>
       </v-row>
       <v-row class="now-printing__overview">
         <v-col @click="cancelDialog()" v-ripple class="now-printing__overview-item">
-          <v-icon size=15vh color=#ff7675>mdi-cancel</v-icon>
+          <v-icon size=15vh color=#ff7675>mdi-close-circle</v-icon>
         </v-col>
         <v-col @click="togglePause().then(function() {update()})" v-ripple class="now-printing__overview-item">
-          <v-icon v-if="printer.state == 'Printing'" size=15vh color=#fdcb6e>mdi-pause</v-icon>
-          <v-icon v-if="printer.state != 'Printing'" size=15vh color=#fdcb6e>mdi-play</v-icon>
+          <v-icon v-if="printer.state == 'Printing'" size=15vh color=#fdcb6e>mdi-pause-circle</v-icon>
+          <v-icon v-if="printer.state != 'Printing'" size=15vh color=#fdcb6e>mdi-play-circle</v-icon>
         </v-col>
         <v-col @click="screen = 'utilities'" v-ripple class="now-printing__overview-item">
           <v-icon size=15vh color=#dfe6e9>mdi-cog</v-icon><br>
@@ -101,14 +101,6 @@
         </v-col>
       </v-row>
       <v-row class="now-printing__overview">
-        <v-col @click="overlay = 'tempAdjust-hotend'" v-ripple class="now-printing__overview-item">
-          <v-icon size=15vh color=#dfe6e9>mdi-printer-3d-nozzle</v-icon><br>
-          <span style="color: #dfe6e9;">Nozzle Temp</span>
-        </v-col>
-        <v-col @click="overlay = 'tempAdjust-heatedbed'" v-ripple class="now-printing__overview-item">
-          <v-icon size=15vh color=#dfe6e9>mdi-radiator</v-icon><br>
-          <span style="color: #dfe6e9;">Bed Temp</span>
-        </v-col>
         <v-col @click="emergencyStop()" v-ripple class="now-printing__overview-item">
           <v-icon size=15vh color=#ff7675>mdi-stop-circle</v-icon><br>
           <span style="color: #ff7675;">Emergency Stop</span>
@@ -160,6 +152,54 @@
     <!-- Utility OVERLAYS, collapse when not working on -->
     <!-- these div tags are useless, only point is code folding :) -->
     <div>
+      <div @click.self="overlay= ''" v-if="overlay == 'tempAdjust-hotend'" style="display: flex; content-align: center; z-index: 10; position: fixed; top: 0%; left: 0%; width: 100vw; height: 100vh; background-color: rgba(28,35,37,0.9);">
+        <div style="z-index: 12; margin: auto; width: 40vw; height: 70vh; border-radius: 20px; border: 4px solid #fff; padding: 10px; padding-left: 15px; padding-right: 15px; background-color: rgba(28,35,37,0.9);">
+          <v-row>
+            <v-col v-ripple @click="nozzleOffset(1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+1</v-col>
+            <v-col></v-col>
+            <v-col v-ripple @click="nozzleOffset(10)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+10</v-col>
+          </v-row>
+          <v-row style="margin-top: 0px; margin-bottom: 0px;">
+            <v-col></v-col>
+            <v-col justify=center align=center style="color: #fff; font-size: 12vh; font-weight: 300;">{{printer.nozzle.target}}</v-col>
+            <v-col></v-col>
+          </v-row>
+          <v-row style="border-bottom: 4px solid #fff;">
+            <v-col v-ripple @click="nozzleOffset(-1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">-1</v-col>
+            <v-col></v-col>
+            <v-col v-ripple @click="nozzleOffset(-10)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">-10</v-col>
+          </v-row>
+          <v-row>
+            <v-col></v-col>
+            <v-col v-ripple @click.self="overlay= ''" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">back</v-col>
+            <v-col></v-col>
+          </v-row>
+        </div>
+      </div>
+      <div @click.self="overlay= ''" v-if="overlay == 'tempAdjust-heatedbed'" style="display: flex; content-align: center; z-index: 10; position: fixed; top: 0%; left: 0%; width: 100vw; height: 100vh; background-color: rgba(28,35,37,0.9);">
+        <div style="z-index: 12; margin: auto; width: 40vw; height: 70vh; border-radius: 20px; border: 4px solid #fff; padding: 10px; padding-left: 15px; padding-right: 15px; background-color: rgba(28,35,37,0.9);">
+          <v-row>
+            <v-col v-ripple @click="bedOffset(1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+1</v-col>
+            <v-col></v-col>
+            <v-col v-ripple @click="bedOffset(10)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+10</v-col>
+          </v-row>
+          <v-row style="margin-top: 0px; margin-bottom: 0px;">
+            <v-col></v-col>
+            <v-col justify=center align=center style="color: #fff; font-size: 12vh; font-weight: 300;">{{printer.bed.target}}</v-col>
+            <v-col></v-col>
+          </v-row>
+          <v-row style="border-bottom: 4px solid #fff;">
+            <v-col v-ripple @click="bedOffset(-1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">-1</v-col>
+            <v-col></v-col>
+            <v-col v-ripple @click="bedOffset(-10)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">-10</v-col>
+          </v-row>
+          <v-row>
+            <v-col></v-col>
+            <v-col v-ripple @click.self="overlay= ''" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">back</v-col>
+            <v-col></v-col>
+          </v-row>
+        </div>
+      </div>
     </div>
 
     <div class="now-printing__details now-printing__dialog" v-if="screen == 'dialog'">
@@ -203,7 +243,9 @@
             text: "Cancel Print",
             icon: "mdi-stop-circle",
             color: "red",
-            action: this.cancelPrint
+            action: () => {
+              this.cancelPrint()
+            }
           }, 
           {
             text: "Back",
@@ -215,6 +257,22 @@
             }
           }, 
         ])
+      },
+      nozzleOffset: function(temp) {
+        if(this.printer.nozzle.target + temp >= 0 && this.printer.nozzle.target + temp <= 275) {
+          this.printer.nozzle.target = this.printer.nozzle.target + temp
+        }
+        this.setNozzleTemp(this.printer.nozzle.target).then(() => {
+          this.update()
+        });
+      },
+      bedOffset: function(temp) {
+        if(this.printer.bed.target + temp >= 0 && this.printer.bed.target + temp <= 275) {
+          this.printer.bed.target = this.printer.bed.target + temp
+        }
+        this.setBedTemp(this.printer.bed.target).then(() => {
+          this.update()
+        });
       },
       update: function() {
         this.getJobStatus().then((data) => {
@@ -285,7 +343,7 @@
     data: function() {
       return {
         screen: "printing",
-        overlay: "tempAdjust-hotend",
+        overlay: "",
         oldScreen: "",
         currentDialog: {
           title: "",
