@@ -9,7 +9,7 @@
         {{printer.name}}
       </v-col>
       <v-col class="main-menu__header-item" align="center">
-        {{Math.round(printer.nozzle.actual)}}°C / {{Math.round(printer.bed.actual)}}°C
+        {{Math.round(printer.nozzle.actual)}}°C <v-icon style="margin-right: 12px;" color=#fff size=20px>mdi-printer-3d-nozzle</v-icon>{{Math.round(printer.bed.actual)}}°C <v-icon color=#fff size=20px>mdi-radiator</v-icon>
       </v-col>
       <v-col class="main-menu__header-item" align="end">
         {{printer.state}}
@@ -17,21 +17,21 @@
     </v-row>
     <v-row class="main-menu__row" align="center" justify="center">
       <v-col @click="goto('/files')" v-ripple class="main-menu__item">
-        <img class="main-menu__item-icon" :src="require('@/assets/folder.svg')"><br>
-        <span style="margin-left: 0.5vw;" class="main-menu__item-title">files</span>
+        <v-icon color=#fff size=10vw class="main-menu__item-icon">mdi-folder-multiple-outline</v-icon><br>
+        <span class="main-menu__item-title">files</span>
       </v-col>
       <v-col @click="goto('/filament')" v-ripple class="main-menu__item">
-        <img class="main-menu__item-icon" :src="require('@/assets/filament.svg')"><br>
-        <span class="main-menu__item-title">filament</span>
+        <v-icon color=#fff size=10vw class="main-menu__item-icon">mdi-dolly</v-icon><br>
+        <span class="main-menu__item-title">materials</span>
       </v-col>
     </v-row>
     <v-row class="main-menu__row" align="center" justify="center">
       <v-col @click="goto('/control')" v-ripple class="main-menu__item">
-        <img style="margin-left: 0vw; width: 8vw;" class="main-menu__item-icon" :src="require('@/assets/control.svg')"><br>
+        <v-icon color=#fff size=10vw class="main-menu__item-icon">mdi-camera-control</v-icon><br>
         <span class="main-menu__item-title">control</span>
       </v-col>
       <v-col @click="goto('/utilities')" v-ripple class="main-menu__item">
-        <img class="main-menu__item-icon" :src="require('@/assets/utilities.svg')"><br>
+        <v-icon color=#fff size=10vw class="main-menu__item-icon">mdi-pencil-ruler</v-icon><br>
         <span class="main-menu__item-title">utilities</span>
       </v-col>
     </v-row>
@@ -47,19 +47,12 @@
     mixins: [OctoprintAPI],
     mounted: function() {
       this.printer.name = config.printerName
-      this.screenTimeout = setTimeout(() => {
-        this.$router.push("/asleep");
-      }, 60000);
       this.update();
       setInterval(this.update, 2500);
     },
     methods: {
       resetTimeout: function() {
-        console.log(this);
-        clearTimeout(this.screenTimeout);
-        this.screenTimeout = setTimeout(() => {
-          this.$router.push("/asleep");
-        }, 60000);
+        return 1
       },
       update: function() {
         this.getPrinterStatus().then((data) => {

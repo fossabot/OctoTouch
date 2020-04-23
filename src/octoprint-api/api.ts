@@ -49,51 +49,53 @@ const OctoprintAPI = {
         },
         resumePrint: function() {
             return new Promise(function(resolve, reject) {
-                /*
                 axios.post(config.baseURL + "job", {command: "pause", action: "resume"} ,{headers: {"X-Api-Key": config.key}}).then(function(response) {
                     resolve(response.data)
                 }).catch(function(error) {
                     reject(error)
                 })
-                */
-                alert("resume")
-                resolve()
-                reject()
             })
         },
         cancelPrint: function() {
             return new Promise(function(resolve, reject) {
-                /*
                 axios.post(config.baseURL + "job", {command: "cancel"} ,{headers: {"X-Api-Key": config.key}}).then(function(response) {
                     resolve(response.data)
                 }).catch(function(error) {
                     reject(error)
                 })
-                */
-                alert("cancel")
-                resolve()
-                reject()
-            })
-        },
-        showCancellationDialog: function() {
-            return new Promise((resolve, reject) => {
-                this.$swal('Wait!','lorem ipsum','warning')
-                resolve()
-                reject()
             })
         },
         togglePause: function() {
             return new Promise(function(resolve, reject) {
-                /*
                 axios.post(config.baseURL + "job", {command: "pause", action: "toggle"} ,{headers: {"X-Api-Key": config.key}}).then(function(response) {
                     resolve(response.data)
                 }).catch(function(error) {
                     reject(error)
                 })
-                */
-                alert("toggle")
-                resolve()
-                reject()
+            })
+        },
+        setFeedrate: function(feedrate) {
+            return new Promise(function(resolve, reject) {
+                if(feedrate == 100) {
+                    resolve()
+                }
+                axios.post(config.baseURL + "printer/printhead", {command: "feedrate", factor: feedrate}, {headers: {"X-Api-Key": config.key}}).then(function(response) {
+                    resolve(response.data)
+                }).catch(function(error) {
+                    reject(error)
+                })
+            })
+        },
+        setFlowrate: function(flowrate) {
+            return new Promise(function(resolve, reject) {
+                if(flowrate == 100) {
+                    resolve()
+                }
+                axios.post(config.baseURL + "printer/tool", {command: "flowrate", factor: flowrate}, {headers: {"X-Api-Key": config.key}}).then(function(response) {
+                    resolve(response.data)
+                }).catch(function(error) {
+                    reject(error)
+                })
             })
         },
 
@@ -110,6 +112,10 @@ const OctoprintAPI = {
             );
         },
         goto: function(url) {
+            console.log(this.screenTimeout)
+            if(this.screenTimeout != undefined) {
+                clearTimeout(this.screenTimeout)
+            }
             this.$router.push(url)
         }
     }

@@ -159,4 +159,37 @@
             float: left;
         }
     }
+
+    &__dialog {
+        margin-left: 15vw;
+        margin-right: 15vw;
+        margin-top: 7vh;
+        text-align: center;
+        &-title {
+            color: #fff;
+        }
+        &-actions {
+            font-weight: 400;
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        &-action-bad {
+            &__icon {
+                color: #ff7675;
+            }
+            color: #ff7675;
+        }
+        &-action-good {
+            &__icon {
+                color: #55efc4;
+            }
+            color: #55efc4;
+        }
+        &-action-neutral {
+            &__icon {
+                color: #dfe6e9;
+            }
+            color: #dfe6e9;
+        }
+    }
 }

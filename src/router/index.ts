@@ -3,7 +3,7 @@ import VueRouter, { RouteConfig } from 'vue-router'
 import MainScreen from '../components/MainScreen/MainScreen.vue'
 import Screensaver from "../components/Screensaver/Screensaver.vue"
 import NowPrinting from "../components/NowPrinting/NowPrinting.vue"
-
+import Control from "../components/Control/Control.vue"
 Vue.use(VueRouter)
 
   const routes: Array<RouteConfig> = [
@@ -21,6 +21,11 @@ Vue.use(VueRouter)
     path: "/now-printing",
     name: "NowPrinting",
     component: NowPrinting
+  },
+  {
+    path: "/control",
+    name: "Control",
+    component: Control
   }
 ]
 

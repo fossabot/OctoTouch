@@ -3,8 +3,8 @@
 </style>
 
 <template>
-  <div fill-height fluid class="screensaver__container">
-    <img @click="screenWake()" class="screensaver__logo" :src="require('@/assets/logo.svg')">
+  <div @click="screenWake()" fill-height fluid class="screensaver__container">
+    <img class="screensaver__logo" :src="require('@/assets/logo.svg')">
   </div>
 </template>
 
