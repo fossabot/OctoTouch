@@ -98,6 +98,35 @@ const OctoprintAPI = {
                 })
             })
         },
+        setNozzleTemp: function(temperature) {
+            return new Promise(function(resolve, reject) {
+                axios.post(config.baseURL + "printer/tool", {command: "target", targets: { tool0: temperature, tool1: temperature }} ,{headers: {"X-Api-Key": config.key}}).then(function(response) {
+                    resolve(response.data)
+                }).catch(function(error) {
+                    reject(error)
+                })
+            })
+        },
+        setBedTemp: function(temperature) {
+            return new Promise(function(resolve, reject) {
+                axios.post(config.baseURL + "printer/bed", {command: "target", target: temperature} ,{headers: {"X-Api-Key": config.key}}).then(function(response) {
+                    resolve(response.data)
+                }).catch(function(error) {
+                    reject(error)
+                })
+            })
+        },
+        action: function(action) {
+            if(action == "home") {
+                return new Promise(function(resolve, reject) {
+                    axios.post(config.baseURL + "printer/printhead", {command: "home", axes: ["x","y","z"]} ,{headers: {"X-Api-Key": config.key}}).then(function(response) {
+                        resolve(response.data)
+                    }).catch(function(error) {
+                        reject(error)
+                    })
+                })
+            }
+        },
 
         //Helper functions
         lengthToWeight: function(length) {
@@ -116,7 +145,15 @@ const OctoprintAPI = {
             if(this.screenTimeout != undefined) {
                 clearTimeout(this.screenTimeout)
             }
+            if(this.updateInterval != undefined) {
+                clearInterval(this.updateInterval)
+            }
             this.$router.push(url)
+        }
+    },
+    data: function() {
+        return {
+            updateInterval: 0
         }
     }
 }

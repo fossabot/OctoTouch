@@ -9,7 +9,7 @@
         <span style="float: left; margin-left: 2vw"><v-icon style="margin-top: -3px" color=#fff size=40px>mdi-arrow-left-circle-outline</v-icon></span>
       </v-col>
       <v-col class="control__header-item" align="center">
-        <v-icon size=30px color=#fff>mdi-camera-control</v-icon>
+        <v-icon size=30px color=#fff>mdi-google-controller</v-icon>
       </v-col>
       <v-col class="control__header-item" align="end">
         <span style="float: right; margin-right: 5vw">{{printer.name}}</span>
@@ -24,7 +24,7 @@
         </v-row>
         <v-row style="height: 107px">
           <v-col v-ripple><v-icon size=20vh color=#fff>mdi-arrow-left-thick</v-icon></v-col>
-          <v-col v-ripple><v-icon style="margin: auto; top: 15%;" size=14vh color=#fff>mdi-home</v-icon></v-col>
+          <v-col @click="action('home')" v-ripple><v-icon style="margin: auto; top: 15%;" size=14vh color=#fff>mdi-home</v-icon></v-col>
           <v-col v-ripple><v-icon size=20vh color=#fff>mdi-arrow-right-thick</v-icon></v-col>
         </v-row>
         <v-row style="height: 107px">
@@ -60,9 +60,9 @@
           <v-col></v-col>
         </v-row>
       </v-col>
-      <v-col :sm="4" style="margin-top: 6vh;">
+      <v-col :sm="4" style="margin-top: 6vh; padding-right: 5vw;">
         <div class="control__detail-item">
-          <v-row>
+          <v-row v-ripple @click="overlay = 'tempAdjust-hotend'">
             <v-col :sm="4">
               <v-icon size=10vh color=#ff7675>mdi-printer-3d-nozzle</v-icon>
             </v-col>
@@ -73,7 +73,7 @@
           </v-row>
         </div><br>
         <div class="control__detail-item">
-          <v-row>
+          <v-row v-ripple @click="overlay = 'tempAdjust-heatedbed'">
             <v-col :sm="4">
               <v-icon size=10vh color=#00b894>mdi-radiator</v-icon>
             </v-col>
@@ -95,6 +95,57 @@
         </div>
       </v-col>
     </v-row>
+
+    <div>
+      <div @click.self="overlay= ''" v-if="overlay == 'tempAdjust-hotend'" style="display: flex; content-align: center; z-index: 10; position: fixed; top: 0%; left: 0%; width: 100vw; height: 100vh; background-color: rgba(28,35,37,0.9);">
+        <div style="z-index: 12; margin: auto; width: 40vw; height: 70vh; border-radius: 20px; border: 4px solid #fff; padding: 10px; padding-left: 15px; padding-right: 15px; background-color: rgba(28,35,37,0.9);">
+          <v-row>
+            <v-col v-ripple @click="nozzleOffset(1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+1</v-col>
+            <v-col></v-col>
+            <v-col v-ripple @click="nozzleOffset(10)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+10</v-col>
+          </v-row>
+          <v-row style="margin-top: 0px; margin-bottom: 0px;">
+            <v-col></v-col>
+            <v-col justify=center align=center style="color: #fff; font-size: 12vh; font-weight: 300;">{{printer.nozzle.target}}</v-col>
+            <v-col></v-col>
+          </v-row>
+          <v-row style="border-bottom: 4px solid #fff;">
+            <v-col v-ripple @click="nozzleOffset(-1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">-1</v-col>
+            <v-col></v-col>
+            <v-col v-ripple @click="nozzleOffset(-10)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">-10</v-col>
+          </v-row>
+          <v-row>
+            <v-col></v-col>
+            <v-col v-ripple @click.self="overlay= ''" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">back</v-col>
+            <v-col></v-col>
+          </v-row>
+        </div>
+      </div> 
+      <div @click.self="overlay= ''" v-if="overlay == 'tempAdjust-heatedbed'" style="display: flex; content-align: center; z-index: 10; position: fixed; top: 0%; left: 0%; width: 100vw; height: 100vh; background-color: rgba(28,35,37,0.9);">
+        <div style="z-index: 12; margin: auto; width: 40vw; height: 70vh; border-radius: 20px; border: 4px solid #fff; padding: 10px; padding-left: 15px; padding-right: 15px; background-color: rgba(28,35,37,0.9);">
+          <v-row>
+            <v-col v-ripple @click="bedOffset(1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+1</v-col>
+            <v-col></v-col>
+            <v-col v-ripple @click="bedOffset(10)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+10</v-col>
+          </v-row>
+          <v-row style="margin-top: 0px; margin-bottom: 0px;">
+            <v-col></v-col>
+            <v-col justify=center align=center style="color: #fff; font-size: 12vh; font-weight: 300;">{{printer.bed.target}}</v-col>
+            <v-col></v-col>
+          </v-row>
+          <v-row style="border-bottom: 4px solid #fff;">
+            <v-col v-ripple @click="bedOffset(-1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">-1</v-col>
+            <v-col></v-col>
+            <v-col v-ripple @click="bedOffset(-10)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">-10</v-col>
+          </v-row>
+          <v-row>
+            <v-col></v-col>
+            <v-col v-ripple @click.self="overlay= ''" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">back</v-col>
+            <v-col></v-col>
+          </v-row>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -109,7 +160,7 @@
     mounted: function() {
       this.update()
       this.printer.name = config.printerName
-      setInterval(this.update, 2500);
+      this.updateInterval = setInterval(this.update, 2500);
     },
     methods: {
       formatTimeRemaining: function(remainingSeconds) {
@@ -125,7 +176,7 @@
           }
         })
         this.getLayerStatus().then((data) => {
-          if(data.fanSpeed == "-") {
+          if(data.fanSpeed == "-" || data.fanSpeed == "Off") {
             this.printer.fan.speed = 0
           } else {
             this.printer.fan.speed = parseInt(data.fanSpeed.split("%")[0])
@@ -137,10 +188,27 @@
           this.printer.bed.target = data.temperature.bed.target
           this.printer.bed.actual = data.temperature.bed.actual
         })
+      },
+      nozzleOffset: function(temp) {
+        if(this.printer.nozzle.target + temp >= 0 && this.printer.nozzle.target + temp <= 275) {
+          this.printer.nozzle.target = this.printer.nozzle.target + temp
+        }
+        this.setNozzleTemp(this.printer.nozzle.target).then(() => {
+          this.update()
+        });
+      },
+      bedOffset: function(temp) {
+        if(this.printer.bed.target + temp >= 0 && this.printer.bed.target + temp <= 275) {
+          this.printer.bed.target = this.printer.bed.target + temp
+        }
+        this.setBedTemp(this.printer.bed.target).then(() => {
+          this.update()
+        });
       }
     },
     data: function() {
       return {
+        overlay: "",
         printer: {
           name: "",
           state: "",

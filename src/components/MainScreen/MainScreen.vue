@@ -17,7 +17,7 @@
     </v-row>
     <v-row class="main-menu__row" align="center" justify="center">
       <v-col @click="goto('/files')" v-ripple class="main-menu__item">
-        <v-icon color=#fff size=10vw class="main-menu__item-icon">mdi-folder-multiple-outline</v-icon><br>
+        <v-icon color=#fff size=10vw class="main-menu__item-icon">mdi-printer-3d</v-icon><br>
         <span class="main-menu__item-title">files</span>
       </v-col>
       <v-col @click="goto('/filament')" v-ripple class="main-menu__item">
@@ -27,11 +27,11 @@
     </v-row>
     <v-row class="main-menu__row" align="center" justify="center">
       <v-col @click="goto('/control')" v-ripple class="main-menu__item">
-        <v-icon color=#fff size=10vw class="main-menu__item-icon">mdi-camera-control</v-icon><br>
+        <v-icon color=#fff size=10vw class="main-menu__item-icon">mdi-google-controller</v-icon><br>
         <span class="main-menu__item-title">control</span>
       </v-col>
       <v-col @click="goto('/utilities')" v-ripple class="main-menu__item">
-        <v-icon color=#fff size=10vw class="main-menu__item-icon">mdi-pencil-ruler</v-icon><br>
+        <v-icon color=#fff size=10vw class="main-menu__item-icon">mdi-cogs</v-icon><br>
         <span class="main-menu__item-title">utilities</span>
       </v-col>
     </v-row>
@@ -48,7 +48,7 @@
     mounted: function() {
       this.printer.name = config.printerName
       this.update();
-      setInterval(this.update, 2500);
+      this.updateInterval = setInterval(this.update, 2500);
     },
     methods: {
       resetTimeout: function() {

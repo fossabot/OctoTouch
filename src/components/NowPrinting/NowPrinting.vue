@@ -101,11 +101,11 @@
         </v-col>
       </v-row>
       <v-row class="now-printing__overview">
-        <v-col @click="screen = 'tempAdjust-hotend'" v-ripple class="now-printing__overview-item">
+        <v-col @click="overlay = 'tempAdjust-hotend'" v-ripple class="now-printing__overview-item">
           <v-icon size=15vh color=#dfe6e9>mdi-printer-3d-nozzle</v-icon><br>
           <span style="color: #dfe6e9;">Nozzle Temp</span>
         </v-col>
-        <v-col @click="screen = 'tempAdjust-heatedbed'" v-ripple class="now-printing__overview-item">
+        <v-col @click="overlay = 'tempAdjust-heatedbed'" v-ripple class="now-printing__overview-item">
           <v-icon size=15vh color=#dfe6e9>mdi-radiator</v-icon><br>
           <span style="color: #dfe6e9;">Bed Temp</span>
         </v-col>
@@ -117,6 +117,7 @@
     </div>
 
     <!-- Utility menus, collapse when not working on -->
+    <!-- these div tags are useless, only point is code folding :) -->
     <div>
 
       <!-- Flowrate adj. screen -->
@@ -156,6 +157,13 @@
       </div>
     </div>
 
+    <!-- Utility OVERLAYS, collapse when not working on -->
+    <!-- these div tags are useless, only point is code folding :) -->
+    <div>
+      <div :if="overlay == 'tempAdjust-hotend'" style="position: fixed; top: 0%; left: 0%; width: 100vw; height: 100vh; background-color: #f00;">
+      </div> 
+    </div>
+
     <div class="now-printing__details now-printing__dialog" v-if="screen == 'dialog'">
       <h1 class="now-printing__dialog-title">{{currentDialog.title}}</h1>
       <v-row class="now-printing__dialog-actions">
@@ -177,7 +185,7 @@
     mixins: [OctoprintAPI],
     mounted: function() {
       this.update()
-      setInterval(this.update, 2500);
+      this.updateInterval = setInterval(this.update, 2500);
     },
     methods: {
       formatTimeRemaining: function(remainingSeconds) {
@@ -228,7 +236,7 @@
         this.getLayerStatus().then((data) => {
           this.job.currentLayer = data.layer.current
           this.job.totalLayers = data.layer.total
-          if(data.fanSpeed == "-") {
+          if(data.fanSpeed == "-" || data.fanSpeed == "Off") {
             this.printer.fan.speed = 0
           } else {
             this.printer.fan.speed = parseInt(data.fanSpeed.split("%")[0])
@@ -272,6 +280,7 @@
     data: function() {
       return {
         screen: "printing",
+        overlay: "tempAdjust-hotend",
         oldScreen: "",
         currentDialog: {
           title: "",
