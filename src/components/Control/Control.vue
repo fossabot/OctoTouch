@@ -86,7 +86,7 @@
         <div class="control__detail-item">
           <v-row>
             <v-col :sm="4">
-              <v-icon size=10vh color=#0984e3>mdi-fan</v-icon>
+              <v-icon size=10vh :class="spinning" color=#0984e3>mdi-fan</v-icon>
             </v-col>
             <v-col>
               <span class="control__detail-text" style="margin-top: 7px;">{{Math.round(printer.fan.speed)}}%</span>
@@ -204,6 +204,15 @@
         this.setBedTemp(this.printer.bed.target).then(() => {
           this.update()
         });
+      }
+    },
+    computed: {
+      spinning: function() {
+        if(this.printer.fan.speed > 0) {
+          return "spin"
+        } else {
+          return ""
+        }
       }
     },
     data: function() {

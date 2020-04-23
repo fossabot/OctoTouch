@@ -63,7 +63,7 @@
         <v-col class="now-printing__overview-item">
           <v-row>
             <v-col>
-              <v-icon size=15vh color=#0984e3 spin>mdi-fan</v-icon>
+              <v-icon size=15vh :class="spinning" color=#0984e3 spin>mdi-fan</v-icon>
             </v-col>
             <v-col>
               <span style="margin-top: 2.5vh;" class="now-printing__overview-text">{{printer.fan.speed}}%</span>
@@ -160,8 +160,6 @@
     <!-- Utility OVERLAYS, collapse when not working on -->
     <!-- these div tags are useless, only point is code folding :) -->
     <div>
-      <div :if="overlay == 'tempAdjust-hotend'" style="position: fixed; top: 0%; left: 0%; width: 100vw; height: 100vh; background-color: #f00;">
-      </div> 
     </div>
 
     <div class="now-printing__details now-printing__dialog" v-if="screen == 'dialog'">
@@ -222,7 +220,7 @@
         this.getJobStatus().then((data) => {
           this.printer.state = data.state
           if(data.state == "Operational" || data.state == "Cancelling") {
-            this.$router.push("/");
+            this.goto("/");
           }
           this.printer.name = config.printerName
           this.job.percentCompleted = data.progress.completion
@@ -274,6 +272,13 @@
           return "Resume Print"
         } else {
           return "Pause Print"
+        }
+      },
+      spinning: function() {
+        if(this.printer.fan.speed > 0) {
+          return "spin"
+        } else {
+          return ""
         }
       }
     },
