@@ -35,5 +35,12 @@
   ],
   "exclude": [
     "node_modules"
+  ],
+  "@typescript-eslint/no-this-alias": [
+    "error",
+    {
+      "allowDestructuring": true, // Allow `const { props, state } = this`; false by default
+      "allowedNames": ["vm"] // Allow `const self = this`; `[]` by default
+    }
   ]
 }
