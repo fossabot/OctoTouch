@@ -127,6 +127,15 @@ const OctoprintAPI = {
                 })
             }
         },
+        jog: function(axis, amt) {
+            return new Promise(function(resolve, reject) {
+                axios.post(config.baseURL + "printer/printhead", {command: "jog", [axis]: amt, speed: 4200} ,{headers: {"X-Api-Key": config.key}}).then(function(response) {
+                    resolve(response.data)
+                }).catch(function(error) {
+                    reject(error)
+                })
+            })
+        },
 
         //Helper functions
         lengthToWeight: function(length) {

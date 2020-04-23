@@ -9,7 +9,7 @@
         <span style="float: left; margin-left: 2vw"><v-icon style="margin-top: -3px" color=#fff size=40px>mdi-arrow-left-circle-outline</v-icon></span>
       </v-col>
       <v-col class="control__header-item" align="center">
-        <v-icon size=30px color=#fff>mdi-google-controller</v-icon>
+        <v-icon style="margin-top: -10px;" size=50px color=#fff>mdi-google-controller</v-icon>
       </v-col>
       <v-col class="control__header-item" align="end">
         <span style="float: right; margin-right: 5vw">{{printer.name}}</span>
@@ -19,17 +19,17 @@
       <v-col :sm="5" class="control__directional-pad">
         <v-row style="height: 107px">
           <v-col></v-col>
-          <v-col v-ripple><v-icon style="margin-top: 5px;" size=20vh color=#fff>mdi-arrow-up-thick</v-icon></v-col>
+          <v-col v-ripple @click="jog('x', 10)" ><v-icon style="margin-top: 5px;" size=20vh color=#fff>mdi-arrow-up-thick</v-icon></v-col>
           <v-col></v-col>
         </v-row>
         <v-row style="height: 107px">
-          <v-col v-ripple><v-icon size=20vh color=#fff>mdi-arrow-left-thick</v-icon></v-col>
+          <v-col @click="jog('y', -10)" v-ripple><v-icon size=20vh color=#fff>mdi-arrow-left-thick</v-icon></v-col>
           <v-col @click="action('home')" v-ripple><v-icon style="margin: auto; top: 15%;" size=14vh color=#fff>mdi-home</v-icon></v-col>
-          <v-col v-ripple><v-icon size=20vh color=#fff>mdi-arrow-right-thick</v-icon></v-col>
+          <v-col @click="jog('y', 10)" v-ripple><v-icon size=20vh color=#fff>mdi-arrow-right-thick</v-icon></v-col>
         </v-row>
         <v-row style="height: 107px">
           <v-col></v-col>
-          <v-col v-ripple><v-icon style="margin-bottom: 5px;" size=20vh color=#fff>mdi-arrow-down-thick</v-icon></v-col>
+          <v-col @click="jog('x', -10)" v-ripple><v-icon style="margin-bottom: 5px;" size=20vh color=#fff>mdi-arrow-down-thick</v-icon></v-col>
           <v-col></v-col>
         </v-row>
         <v-row style="height: 107px">
@@ -41,7 +41,7 @@
       <v-col :sm="3">
         <v-row style="height: 107px">
           <v-col></v-col>
-          <v-col v-ripple><v-icon style="margin-top: 5px;" size=20vh color=#fff>mdi-arrow-up-thick</v-icon></v-col>
+          <v-col @click="jog('z', 10)" v-ripple><v-icon style="margin-top: 5px;" size=20vh color=#fff>mdi-arrow-up-thick</v-icon></v-col>
           <v-col></v-col>
         </v-row>
         <v-row style="height: 107px">
@@ -51,7 +51,7 @@
         </v-row>
         <v-row style="height: 107px">
           <v-col></v-col>
-          <v-col v-ripple><v-icon style="margin-bottom: 5px;" size=20vh color=#fff>mdi-arrow-down-thick</v-icon></v-col>
+          <v-col @click="jog('z', -10)" v-ripple><v-icon style="margin-bottom: 5px;" size=20vh color=#fff>mdi-arrow-down-thick</v-icon></v-col>
           <v-col></v-col>
         </v-row>
         <v-row style="height: 107px">
