@@ -6,26 +6,16 @@ module.exports = {
     electronBuilder: {
       builderOptions: {
         "appId": "octotouch",
-    "dmg": {
-      "contents": [
-        {
-          "x": 110,
-          "y": 150
-        },
-        {
-          "x": 240,
-          "y": 150,
-          "type": "link",
-          "path": "/Applications"
+        "name": "OctoTouch",
+        "description": "OctoPrint touch panel with material design influences",
+        "homepage": "https://github.com/acvigue/OctoTouch",
+        "repository": "https://github.com/acvigue/OctoTouch",
+        "linux": {
+          "target": [
+            "AppImage",
+            "deb"
+          ]
         }
-      ]
-    },
-    "linux": {
-      "target": [
-        "AppImage",
-        "deb"
-      ]
-    }
       }
     }
   }
