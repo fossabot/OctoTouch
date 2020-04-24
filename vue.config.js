@@ -8,9 +8,14 @@ module.exports = {
         "appId": "octotouch",
         "linux": {
           "target": [
-            "AppImage",
-            "deb"
-          ]
+            {
+              "target": "deb",
+              "arch": [
+                "armv7l"
+              ]
+            }
+          ],
+          "category": "Utility"
         },
         "extends": null
       }
