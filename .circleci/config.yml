@@ -11,9 +11,10 @@ jobs:
           steps:
             - run: npm install
             - run: npm run electron:build
+            - run: pwd && ls /home/circleci
       - persist_to_workspace:
-          root: ~/
-          paths: dist_electron
+          root: /home/circleci
+          paths: dist_electron/
   publish-github-release:
     docker:
       - image: circleci/golang:1.8
