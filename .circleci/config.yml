@@ -12,8 +12,8 @@ jobs:
             - run: npm install
             - run: npm run electron:build
       - persist_to_workspace:
-        root: ~/
-        paths: dist_electron
+          root: ~/
+          paths: dist_electron
   publish-github-release:
     docker:
       - image: circleci/golang:1.8
