@@ -4,20 +4,20 @@
 
 <template>
   <div @click="resetTimeout()" fill-height fluid class="main-menu__container">
-    <v-row class="main-menu__header" align="center" justify="center">
-      <v-col class="main-menu__header-item" align="start">
+    <v-row class="header" align="center" justify="center">
+      <v-col class="header-item" align="start">
         {{printer.name}}
       </v-col>
-      <v-col class="main-menu__header-item" align="center">
+      <v-col class="header-item" align="center">
         {{Math.round(printer.nozzle.actual)}}°C <v-icon style="margin-right: 12px;" color=#fff size=20px>mdi-printer-3d-nozzle</v-icon>{{Math.round(printer.bed.actual)}}°C <v-icon color=#fff size=20px>mdi-radiator</v-icon>
       </v-col>
-      <v-col class="main-menu__header-item" align="end">
+      <v-col class="header-item" align="end">
         {{printer.state}}
       </v-col>
     </v-row>
     <v-row class="main-menu__row" align="center" justify="center">
       <v-col @click="goto('/files')" v-ripple class="main-menu__item">
-        <v-icon color=#fff size=10vw class="main-menu__item-icon">mdi-printer-3d</v-icon><br>
+        <v-icon color=#fff size=10vw class="main-menu__item-icon">mdi-folder-multiple</v-icon><br>
         <span class="main-menu__item-title">files</span>
       </v-col>
       <v-col @click="goto('/filament')" v-ripple class="main-menu__item">

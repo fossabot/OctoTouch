@@ -31,6 +31,15 @@ const OctoprintAPI = {
                 })
             });
         },
+        getFiles: function() {
+            return new Promise(function(resolve, reject) {
+                axios.get((config.baseURL + "files"), {headers: {"X-Api-Key": config.key}}).then(function(response) {
+                    resolve(response.data.files)
+                }).catch(function(error) {
+                    reject(error)
+                })
+            });
+        },
 
         //Setters
         pausePrint: function() {

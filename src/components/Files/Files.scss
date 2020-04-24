@@ -1,0 +1,128 @@
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+@keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
+.files {
+    &__container {
+        background-color: #2d3436;
+        overflow: hidden;
+        padding: 0px !important;
+        height: 100vh;
+    }
+
+    &__files {
+        margin: 2vw;
+        margin-right: -2vw;
+        margin-left: 2.8vw;
+        margin-top: 0vw;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: start;
+        align-content: center;
+    }
+
+    &__file {
+        width: 30vw;
+        border-radius: 5px;
+        background-color: #636e72;
+        margin-right: 2vw;
+        margin-top: 2vw;
+        padding: 1vh;
+
+        &-information {
+            margin-top: 1vh;
+        }
+
+        &-popup {
+            &__name {
+                text-align: center;
+                font-size: 20px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+
+            &__stats {
+                display: flex;
+                align-content: center;
+                justify-content: center;
+            }
+
+            &__stat {
+                width: 33%;
+                text-align: center;
+                font-size: 25px;
+                font-weight: 300;
+
+                &-small {
+                    font-size: 15px;
+                }
+            }
+        }
+
+        &-name {
+            color: #fff;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        &-image {
+            display: flex;
+            margin: 1vh;
+            justify-content: center;
+
+            img {
+                width: 50%;
+            }
+        }
+    }
+
+    &__header {
+        height: 10vh !important;
+
+        &-item:first-of-type {
+            z-index: 2;
+            font-size: 20px;
+            font-weight: 500 !important;
+            text-align: center;
+            color: #fff;
+            height: 100%;
+        }
+
+        &-item {
+            z-index: 2;
+            font-size: 20px;
+            font-weight: 300;
+            text-align: center;
+            color: #fff;
+            height: 100%;
+        }
+    }
+}

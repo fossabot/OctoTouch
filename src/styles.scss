@@ -1,0 +1,116 @@
+.modal {
+    &-container {
+        display: flex;
+        content-align: center;
+        z-index: 10;
+        position: fixed;
+        top: 0%;
+        left: 0%;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(28,35,37,0.9);
+    }
+
+    &-wrapper {
+        color: #fff;
+        z-index: 12;
+        margin: auto;
+        width: 40vw;
+        height: 70vh;
+        border-radius: 20px;
+        padding: 10px;
+        padding-left: 15px;
+        padding-right: 15px; 
+        background-color: rgba(28,35,37,0.9);
+    }
+
+    &-title {
+        color: #fff;
+        font-size: 20px;
+    }
+
+    &-close {
+        float: right;
+        margin-right: -2px;
+    }
+}
+
+.header {
+        height: 10vh !important;
+
+        &-item:first-of-type {
+            z-index: 2;
+            font-size: 20px;
+            font-weight: 500 !important;
+            text-align: center;
+            color: #fff;
+            height: 100%;
+            float: left;
+            margin-left: 2vw;
+        }
+
+        &-item:last-of-type {
+            z-index: 2;
+            font-size: 20px;
+            font-weight: 500 !important;
+            text-align: center;
+            color: #fff;
+            height: 100%;
+            float: left;
+            margin-left: 2vw;
+        }
+
+        &-item {
+            z-index: 2;
+            font-size: 20px;
+            font-weight: 300;
+            text-align: center;
+            color: #fff;
+            height: 100%;
+        }
+    }
+
+::-webkit-scrollbar {
+    width: 3vw;
+    box-shadow: none;
+    outline: none;
+
+    &-track {
+        background: transparent;
+        border-radius: 0.85vw;
+        box-shadow: none;
+        outline: none;
+
+        &-piece {
+            &:end {
+                background: transparent;
+                margin-bottom: 6vh;
+            }
+
+            &:start {
+                background: transparent;
+                margin-top: 4vh;
+            }
+        }
+    }
+
+    &-thumb {
+        background: rgba(127, 143, 166, 0.8);
+        border-radius: 0.85vw;
+        box-shadow: none;
+        outline: none;
+    }
+}
+
+.scroll__thumb-inactive {
+    display: block;
+    background-color: rgba(127, 143, 166, 0.3);
+    width: 3vw;
+    height: 66.4vh;
+    position: fixed;
+    right: 2.5vw;
+    top: 28vh;
+    border-radius: 0.89vw;
+    z-index: 0;
+    pointer-events: none;
+}

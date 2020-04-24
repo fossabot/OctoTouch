@@ -4,14 +4,14 @@
 
 <template>
   <div fill-height fluid class="control__container">
-    <v-row class="control__header">
-      <v-col @click="goto('/')" class="control__header-item" align="start">
+    <v-row class="header">
+      <v-col @click="goto('/')" class="header-item" align="start">
         <span style="float: left; margin-left: 2vw"><v-icon style="margin-top: -3px" color=#fff size=40px>mdi-arrow-left-circle-outline</v-icon></span>
       </v-col>
-      <v-col class="control__header-item" align="center">
-        <v-icon style="margin-top: -10px;" size=50px color=#fff>mdi-google-controller</v-icon>
+      <v-col class="header-item" align="center">
+        <v-icon style="margin-top: -3px;" size=40px color=#fff>mdi-google-controller</v-icon>
       </v-col>
-      <v-col class="control__header-item" align="end">
+      <v-col class="header-item" align="end">
         <span style="float: right; margin-right: 5vw">{{printer.name}}</span>
       </v-col>
     </v-row>
@@ -24,7 +24,7 @@
         </v-row>
         <v-row style="height: 107px">
           <v-col @click="jog('x', -10)" v-ripple><v-icon size=20vh color=#fff>mdi-arrow-left-thick</v-icon></v-col>
-          <v-col @click="action('home')" v-ripple><v-icon style="margin: auto; top: 15%;" size=14vh color=#fff>mdi-home</v-icon></v-col>
+          <v-col @click="action('home')" v-ripple><v-icon style="margin: auto; top: 15%; width: 7vw;" size=14vh color=#fff>mdi-home</v-icon></v-col>
           <v-col @click="jog('x', 10)" v-ripple><v-icon size=20vh color=#fff>mdi-arrow-right-thick</v-icon></v-col>
         </v-row>
         <v-row style="height: 107px">
@@ -60,7 +60,7 @@
           <v-col></v-col>
         </v-row>
       </v-col>
-      <v-col :sm="4" style="margin-top: 3vh; padding-right: 5vw;">
+      <v-col :sm="3" style="margin-top: 3vh; padding-right: 5vw;">
         <div class="control__detail-item">
           <v-row v-ripple @click="overlay = 'tempAdjust-hotend'">
             <v-col :sm="4">
@@ -97,54 +97,58 @@
     </v-row>
 
     <div>
-      <div @click.self="overlay= ''" v-if="overlay == 'tempAdjust-hotend'" style="display: flex; content-align: center; z-index: 10; position: fixed; top: 0%; left: 0%; width: 100vw; height: 100vh; background-color: rgba(28,35,37,0.9);">
-        <div style="z-index: 12; margin: auto; width: 40vw; height: 70vh; border-radius: 20px; border: 4px solid #fff; padding: 10px; padding-left: 15px; padding-right: 15px; background-color: rgba(28,35,37,0.9);">
-          <v-row>
-            <v-col v-ripple @click="nozzleOffset(1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+1</v-col>
-            <v-col></v-col>
-            <v-col v-ripple @click="nozzleOffset(10)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+10</v-col>
-          </v-row>
-          <v-row style="margin-top: 0px; margin-bottom: 0px;">
-            <v-col></v-col>
-            <v-col justify=center align=center style="color: #fff; font-size: 12vh; font-weight: 300;">{{printer.nozzle.target}}</v-col>
-            <v-col></v-col>
-          </v-row>
-          <v-row style="border-bottom: 4px solid #fff;">
-            <v-col v-ripple @click="nozzleOffset(-1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">-1</v-col>
-            <v-col></v-col>
-            <v-col v-ripple @click="nozzleOffset(-10)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">-10</v-col>
-          </v-row>
-          <v-row>
-            <v-col></v-col>
-            <v-col v-ripple @click.self="overlay= ''" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">back</v-col>
-            <v-col></v-col>
-          </v-row>
+      <transition name="fade">
+        <div @click.self="overlay= ''" v-if="overlay == 'tempAdjust-hotend'" style="display: flex; content-align: center; z-index: 10; position: fixed; top: 0%; left: 0%; width: 100vw; height: 100vh; background-color: rgba(28,35,37,0.9);">
+          <div style="z-index: 12; margin: auto; width: 40vw; height: 70vh; border-radius: 20px; border: 4px solid #fff; padding: 10px; padding-left: 15px; padding-right: 15px; background-color: rgba(28,35,37,0.9);">
+            <v-row>
+              <v-col v-ripple @click="nozzleOffset(1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+1</v-col>
+              <v-col></v-col>
+              <v-col v-ripple @click="nozzleOffset(10)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+10</v-col>
+            </v-row>
+            <v-row style="margin-top: 0px; margin-bottom: 0px;">
+              <v-col></v-col>
+              <v-col justify=center align=center style="color: #fff; font-size: 12vh; font-weight: 300;">{{printer.nozzle.target}}</v-col>
+              <v-col></v-col>
+            </v-row>
+            <v-row style="border-bottom: 4px solid #fff;">
+              <v-col v-ripple @click="nozzleOffset(-1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">-1</v-col>
+              <v-col></v-col>
+              <v-col v-ripple @click="nozzleOffset(-10)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">-10</v-col>
+            </v-row>
+            <v-row>
+              <v-col></v-col>
+              <v-col v-ripple @click.self="overlay= ''" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">back</v-col>
+              <v-col></v-col>
+            </v-row>
+          </div>
+        </div> 
+      </transition>
+      <transition name="fade">
+        <div @click.self="overlay= ''" v-if="overlay == 'tempAdjust-heatedbed'" style="display: flex; content-align: center; z-index: 10; position: fixed; top: 0%; left: 0%; width: 100vw; height: 100vh; background-color: rgba(28,35,37,0.9);">
+          <div style="z-index: 12; margin: auto; width: 40vw; height: 70vh; border-radius: 20px; border: 4px solid #fff; padding: 10px; padding-left: 15px; padding-right: 15px; background-color: rgba(28,35,37,0.9);">
+            <v-row>
+              <v-col v-ripple @click="bedOffset(1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+1</v-col>
+              <v-col></v-col>
+              <v-col v-ripple @click="bedOffset(10)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+10</v-col>
+            </v-row>
+            <v-row style="margin-top: 0px; margin-bottom: 0px;">
+              <v-col></v-col>
+              <v-col justify=center align=center style="color: #fff; font-size: 12vh; font-weight: 300;">{{printer.bed.target}}</v-col>
+              <v-col></v-col>
+            </v-row>
+            <v-row style="border-bottom: 4px solid #fff;">
+              <v-col v-ripple @click="bedOffset(-1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">-1</v-col>
+              <v-col></v-col>
+              <v-col v-ripple @click="bedOffset(-10)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">-10</v-col>
+            </v-row>
+            <v-row>
+              <v-col></v-col>
+              <v-col v-ripple @click.self="overlay= ''" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">back</v-col>
+              <v-col></v-col>
+            </v-row>
+          </div>
         </div>
-      </div> 
-      <div @click.self="overlay= ''" v-if="overlay == 'tempAdjust-heatedbed'" style="display: flex; content-align: center; z-index: 10; position: fixed; top: 0%; left: 0%; width: 100vw; height: 100vh; background-color: rgba(28,35,37,0.9);">
-        <div style="z-index: 12; margin: auto; width: 40vw; height: 70vh; border-radius: 20px; border: 4px solid #fff; padding: 10px; padding-left: 15px; padding-right: 15px; background-color: rgba(28,35,37,0.9);">
-          <v-row>
-            <v-col v-ripple @click="bedOffset(1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+1</v-col>
-            <v-col></v-col>
-            <v-col v-ripple @click="bedOffset(10)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+10</v-col>
-          </v-row>
-          <v-row style="margin-top: 0px; margin-bottom: 0px;">
-            <v-col></v-col>
-            <v-col justify=center align=center style="color: #fff; font-size: 12vh; font-weight: 300;">{{printer.bed.target}}</v-col>
-            <v-col></v-col>
-          </v-row>
-          <v-row style="border-bottom: 4px solid #fff;">
-            <v-col v-ripple @click="bedOffset(-1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">-1</v-col>
-            <v-col></v-col>
-            <v-col v-ripple @click="bedOffset(-10)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">-10</v-col>
-          </v-row>
-          <v-row>
-            <v-col></v-col>
-            <v-col v-ripple @click.self="overlay= ''" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">back</v-col>
-            <v-col></v-col>
-          </v-row>
-        </div>
-      </div>
+      </transition>
     </div>
   </div>
 </template>

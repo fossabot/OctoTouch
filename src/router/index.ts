@@ -4,6 +4,7 @@ import MainScreen from '../components/MainScreen/MainScreen.vue'
 import Screensaver from "../components/Screensaver/Screensaver.vue"
 import NowPrinting from "../components/NowPrinting/NowPrinting.vue"
 import Control from "../components/Control/Control.vue"
+import Files from "../components/Files/Files.vue"
 Vue.use(VueRouter)
 
   const routes: Array<RouteConfig> = [
@@ -26,6 +27,11 @@ Vue.use(VueRouter)
     path: "/control",
     name: "Control",
     component: Control
+  },
+  {
+    path: "/files",
+    name: "Files",
+    component: Files
   }
 ]
 
