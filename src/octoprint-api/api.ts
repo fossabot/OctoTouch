@@ -145,7 +145,24 @@ const OctoprintAPI = {
                 })
             })
         },
-
+        printFile: function(file) {
+            return new Promise(function(resolve, reject) {
+                axios.post(config.baseURL + "files/local/" + file.path, {command: "select", print: "true"} ,{headers: {"X-Api-Key": config.key}}).then(function(response) {
+                    resolve(response.data)
+                }).catch(function(error) {
+                    reject(error)
+                })
+            })
+        },
+        deleteFile: function(file) {
+            return new Promise(function(resolve, reject) {
+                axios.delete(config.baseURL + "files/local/" + file.path, {headers: {"X-Api-Key": config.key}}).then(function(response) {
+                    resolve(response.data)
+                }).catch(function(error) {
+                    reject(error)
+                })
+            })
+        },
         //Helper functions
         lengthToWeight: function(length) {
             return (

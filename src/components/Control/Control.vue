@@ -60,7 +60,7 @@
           <v-col></v-col>
         </v-row>
       </v-col>
-      <v-col :sm="3" style="margin-top: 3vh; padding-right: 5vw;">
+      <v-col :sm="4" style="margin-top: 3vh; padding-right: 5vw;">
         <div class="control__detail-item">
           <v-row v-ripple @click="overlay = 'tempAdjust-hotend'">
             <v-col :sm="4">

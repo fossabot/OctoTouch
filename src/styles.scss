@@ -35,6 +35,50 @@
     }
 }
 
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+@keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+
+@keyframes barberpole {
+    100% {
+        background-position: 100% 100%;
+    }
+}
+
+.barberpole {
+    background-image: 
+    repeating-linear-gradient(
+        -45deg, 
+        transparent, 
+        transparent 1rem,
+        #E8B763 1rem,
+        #E8B763 2rem
+    );
+    background-size: 200% 200%;
+    animation: barberpole 15s linear infinite;
+}
+
+.spin {
+    animation: spin 1.5s infinite linear;
+}
+
 .header {
         height: 10vh !important;
 

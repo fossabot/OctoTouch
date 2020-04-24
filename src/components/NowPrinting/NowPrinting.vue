@@ -9,23 +9,28 @@
         <span style="float: left; margin-left: 5vw">{{printer.name}}</span>
       </v-col>
       <v-col class="now-printing__header-item" align="center">
-        Layer <span class="now-printing__layer-current">{{job.currentLayer}}</span> of {{job.totalLayers}}
+        <v-icon style="margin-top: -3px;" size=40px color=#fff>mdi-printer-3d</v-icon>
       </v-col>
-      <v-col class="now-printing__header-item" align="end">
-        <span style="float: right; margin-right: 5vw">{{printer.state}}</span>
+      <v-col class="now-printing__header-item" style="text-align: right;" align="end">
+        <span style="margin-right: 5vw; ">Layer <span class="now-printing__layer-current">{{job.currentLayer}}</span> of {{job.totalLayers}}</span>
       </v-col>
     </v-row>
     
     <!-- Progress Bar -->
-    <div class="now-printing__progress" :class="{ 'paused' : (printer.state == 'Pausing' || printer.state == 'Paused')}" :style="'width: ' + (job.percentCompleted + 1) + 'vw;'"></div>
+    <div class="now-printing__progress" :class="{ 'paused' : (printer.state == 'Pausing' || printer.state == 'Paused'), 'barberpole' : (true)}" :style="'width: ' + (job.percentCompleted + 1) + 'vw;'"></div>
     <v-row class="now-printing__details">
-      <v-col class="now-printing__progress-below" align="start">
-        <span class="now-printing__details-percent">{{Math.floor(job.percentCompleted)}}%</span><br>
-        <span class="now-printing__details-remaining"><v-icon size=30px color=white>mdi-clock</v-icon> {{formatTimeRemaining(job.timeRemaining)}}</span><br>
+      <v-col v-if="printer.isHeating == false && printer.isCooling == false" class="now-printing__progress-below" align="start" :sm="2">
+        <span class="now-printing__details-percent">{{Math.round(job.percentCompleted)}}%</span><br>
+        <span class="now-printing__details-remaining"><v-icon style="margin-top: -0.7vh;" size=30px color=white>mdi-clock</v-icon> {{formatTimeRemaining(job.timeRemaining)}}</span><br>
       </v-col>
-      <v-col class="now-printing__progress-below now-printing__progress-details" style="color: white; font-size: 40px; line-height: 20px;" :sm="10" v-ripple align="end">
+      <v-col v-if="printer.isHeating == true || printer.isCooling == true" class="now-printing__progress-below" align="start" :sm="2">
+        <span v-if="printer.isHeating == true" class="now-printing__details-percent">Heating</span>
+        <span v-if="printer.isCooling == true" class="now-printing__details-percent">Cooling</span><br>
+        <span class="now-printing__details-remaining" style="font-size: 20px;">Please wait</span><br>
+      </v-col>
+      <v-col @click="overlay='print-picture'" class="now-printing__progress-below now-printing__progress-details" style="color: white; font-size: 40px; line-height: 20px;" :sm="10" v-ripple align="end">
         <h1 class="now-printing__details-title">
-          {{job.filename.replace("ADMFOR25EX_","").replace("LM_","").replace(".ufp", "").replace(/_/g, " ")}}
+          {{job.filename.replace("ADMFOR25EX_","").replace("LM_","").replace(".ufp", "").replace(".gcode","").replace(/_/g, " ")}}
         </h1>
         <h3 class="now-printing__details-subtitle">
           {{job.filamentUsage[0]}}g <v-icon size=20px color=white>mdi-printer-3d-nozzle</v-icon><v-icon v-if="job.filamentUsage.length > 1" size=20px color=white>mdi-numeric-0-box</v-icon>
@@ -56,7 +61,7 @@
             </v-col>
             <v-col>
               <span class="now-printing__overview-text">{{Math.round(printer.bed.actual)}}<span style="font-size:20px;">°C</span></span><br><br>
-              <span class="now-printing__overview-text-small" style="margin-top: -15px">{{printer.bed.target}}°C</span>
+              <span class="now-printing__overview-text-small" style="margin-top: -20px">{{printer.bed.target}}°C</span>
             </v-col>
           </v-row>
         </v-col>
@@ -77,7 +82,8 @@
         </v-col>
         <v-col @click="togglePause().then(function() {update()})" v-ripple class="now-printing__overview-item">
           <v-icon v-if="printer.state == 'Printing'" size=15vh color=#fdcb6e>mdi-pause-circle</v-icon>
-          <v-icon v-if="printer.state != 'Printing'" size=15vh color=#fdcb6e>mdi-play-circle</v-icon>
+          <v-icon v-if="printer.state == 'Paused'" size=15vh color=#fdcb6e>mdi-play-circle</v-icon>
+          <v-icon v-if="printer.state == 'Pausing' || printer.state == 'Resuming'" size=15vh color=#fdcb6e>mdi-dots-horizontal-circle</v-icon>
         </v-col>
         <v-col @click="screen = 'utilities'" v-ripple class="now-printing__overview-item">
           <v-icon size=15vh color=#dfe6e9>mdi-cog</v-icon><br>
@@ -152,6 +158,11 @@
     <!-- Utility OVERLAYS, collapse when not working on -->
     <!-- these div tags are useless, only point is code folding :) -->
     <div>
+      <div @click.self="overlay= ''" v-if="overlay == 'print-picture'" style="display: flex; content-align: center; z-index: 10; position: fixed; top: 0%; left: 0%; width: 100vw; height: 100vh; background-color: rgba(28,35,37,0.9);">
+        <div style="text-align: center; z-index: 12; margin: auto; width: 40vw; height: 70vh; border-radius: 20px; border: 4px solid #fff; padding: 10px; padding-left: 15px; padding-right: 15px; background-color: rgba(28,35,37,0.9);">
+          <img style="width: 35vw;" :src="ufpPreviewURL(job.filepath)">
+        </div>
+      </div>
       <div @click.self="overlay= ''" v-if="overlay == 'tempAdjust-hotend'" style="display: flex; content-align: center; z-index: 10; position: fixed; top: 0%; left: 0%; width: 100vw; height: 100vh; background-color: rgba(28,35,37,0.9);">
         <div style="z-index: 12; margin: auto; width: 40vw; height: 70vh; border-radius: 20px; border: 4px solid #fff; padding: 10px; padding-left: 15px; padding-right: 15px; background-color: rgba(28,35,37,0.9);">
           <v-row>
@@ -258,6 +269,9 @@
           }, 
         ])
       },
+      ufpPreviewURL: function(file) {
+        return config.baseURL.replace('/api/', '') + '/plugin/UltimakerFormatPackage/thumbnail/' + file.replace('.ufp.gcode','.png')
+      },
       nozzleOffset: function(temp) {
         if(this.printer.nozzle.target + temp >= 0 && this.printer.nozzle.target + temp <= 275) {
           this.printer.nozzle.target = this.printer.nozzle.target + temp
@@ -275,19 +289,44 @@
         });
       },
       update: function() {
-        this.getJobStatus().then((data) => {
-          this.printer.state = data.state
-          if(data.state == "Operational" || data.state == "Cancelling") {
-            this.goto("/");
+        this.getPrinterStatus().then((data) => {
+          this.printer.nozzle.target = data.temperature.tool0.target
+          this.printer.nozzle.actual = data.temperature.tool0.actual
+          this.printer.bed.target = data.temperature.bed.target
+          this.printer.bed.actual = data.temperature.bed.actual
+
+          if(Math.abs(this.printer.nozzle.actual - this.printer.nozzle.target) > 10 || Math.abs(this.printer.bed.actual - this.printer.bed.target) > 3) {
+            if(this.printer.nozzle.actual > this.printer.nozzle.target || this.printer.bed.actual > this.printer.bed.target) {
+              this.printer.isCooling = true;
+              this.printer.isHeating = false;
+            } else {
+              this.printer.isHeating = true;
+              this.printer.isCooling = false;
+            }
+          } else {
+            this.printer.isHeating = false;
+            this.printer.isCooling = false;
           }
-          this.printer.name = config.printerName
-          this.job.percentCompleted = data.progress.completion
-          this.job.filename = data.job.file.name
-          this.job.timeRemaining = data.progress.printTimeLeft
-          this.job.filamentUsage[0] = this.lengthToWeight(data.job.filament.tool0.length)
-          if(data.job.filament.tool1 != undefined) {
-            this.job.filamentUsage[1] = this.lengthToWeight(data.job.filament.tool1.length)
-          }
+        }).then(() => {
+          this.getJobStatus().then((data) => {
+            this.printer.state = data.state
+            if(data.state == "Operational" || data.state == "Cancelling") {
+              this.goto("/");
+            }
+            this.printer.name = config.printerName
+            if(this.printer.isHeating == true || this.printer.isCooling == true) {
+              this.job.percentCompleted = 100
+            } else {
+              this.job.percentCompleted = data.progress.completion
+            }
+            this.job.filename = data.job.file.name
+            this.job.filepath = data.job.file.path
+            this.job.timeRemaining = data.progress.printTimeLeft
+            this.job.filamentUsage[0] = this.lengthToWeight(data.job.filament.tool0.length)
+            if(data.job.filament.tool1 != undefined) {
+              this.job.filamentUsage[1] = this.lengthToWeight(data.job.filament.tool1.length)
+            }
+          })
         })
         this.getLayerStatus().then((data) => {
           this.job.currentLayer = data.layer.current
@@ -297,12 +336,6 @@
           } else {
             this.printer.fan.speed = parseInt(data.fanSpeed.split("%")[0])
           }
-        })
-        this.getPrinterStatus().then((data) => {
-          this.printer.nozzle.target = data.temperature.tool0.target
-          this.printer.nozzle.actual = data.temperature.tool0.actual
-          this.printer.bed.target = data.temperature.bed.target
-          this.printer.bed.actual = data.temperature.bed.actual
         })
       },
       goodOrBad: function(action) {
@@ -352,6 +385,7 @@
         job: {
           percentCompleted: 0,
           filename: "",
+          filepath: "",
           filamentUsage: [],
           timeRemaining: 0,
           currentLayer: 0,
@@ -359,6 +393,8 @@
         },
         printer: {
           name: "",
+          isHeating: false,
+          isCooling: false,
           state: "",
           nozzle: {
             target: 0,

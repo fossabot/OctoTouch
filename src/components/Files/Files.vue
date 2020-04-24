@@ -9,19 +9,31 @@
         <span style="float: left; margin-left: 2vw"><v-icon style="margin-top: -3px" color=#fff size=40px>mdi-arrow-left-circle-outline</v-icon></span>
       </v-col>
       <v-col class="header-item" align="center">
-        <v-icon style="margin-top: -3px;" size=40px color=#fff>mdi-folder-multiple-outline</v-icon>
+        <v-icon style="margin-top: -3px;" size=40px color=#fff>mdi-folder-multiple</v-icon>
       </v-col>
       <v-col class="header-item" align="end">
         <span style="float: right; margin-right: 5vw">{{printer.name}}</span>
       </v-col>
     </v-row>
+
+    <!-- file list -->
     <div class="files__files">
       <div class="files__file" @click="openFile(file)" v-for="(file, idx) in files" v-bind:key="idx">
-        <div class="files__file-image">
-          <img :src="ufpPreviewURL(file)">
+        <div v-if="file.type == 'machinecode'">
+          <div class="files__file-image">
+            <img :src="ufpPreviewURL(file)">
+          </div>
+          <div class="files__file-information">
+            <p class="files__file-name">{{file.name.replace("ADMFOR25EX_","").replace(".ufp","").replace(".gcode", "")}}</p>
+          </div>
         </div>
-        <div class="files__file-information">
-          <p class="files__file-name">{{file.name.replace("ADMFOR25EX_","").replace(".ufp","").replace(".gcode", "")}}</p>
+        <div v-if="file.type == 'folder'">
+          <div class="files__file-image">
+            <v-icon size=110px color=#2d3436>mdi-folder</v-icon>
+          </div>
+          <div class="files__file-information">
+            <p class="files__file-name">{{file.name}}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -51,6 +63,14 @@
                   {{lengthToWeight(fileBeingViewed.gcodeAnalysis.filament.tool0.length)}}<span class="files__file-popup__stat-small">g</span>
                 </div>
               </div>
+              <div class="files__file-popup__actions">
+                <div class="files__file-popup__action" v-ripple @click="printFile(fileBeingViewed).then(() => { update(); viewingFile = false })">
+                  <v-icon color=#00b894 size=40px>mdi-printer-3d</v-icon>
+                </div>
+                <div class="files__file-popup__action" v-ripple @click="deleteFile(fileBeingViewed).then(() => { update(); viewingFile = false })">
+                  <v-icon color=#ff7675 size=40px>mdi-delete</v-icon>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -74,16 +94,11 @@
 
       //Retrieve files and display on page...
       this.getFiles().then((data) => {
+        this.files = []
         data.forEach((e,i) => {
-          console.log(e)
-          if(e.type == "machinecode") {
-            this.files.push(e)
-            console.log(this.files)
-          } else {
-            console.log("Folders not supported yet... :(")
-          }
+          this.files.push(e)
         })
-        this.openFile(this.files[0]);
+        //this.openFile(this.files[1]);
       })
     },
     methods: {
@@ -102,6 +117,13 @@
           if(data.state == "Printing" || data.state == "Starting") {
             this.$router.push("/now-printing");
           }
+        })
+        this.getFiles().then((data) => {
+          this.files = []
+          data.forEach((e,i) => {
+            this.files.push(e)
+          })
+          //this.openFile(this.files[1]);
         })
       },
       ufpPreviewURL: function(file) {
