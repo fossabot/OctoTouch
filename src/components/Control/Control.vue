@@ -155,8 +155,9 @@
 
 <script lang="ts">
   import Vue from 'vue'
-  import {OctoprintAPI} from '../../octoprint-api/api.ts'
-  import {config} from "../../config.ts"
+  import {OctoprintAPI} from '../../octoprint-api/api'
+  import {config} from "../../config"
+  declare var moment
 
   export default Vue.extend({
     name: 'Control',
@@ -168,7 +169,7 @@
     },
     methods: {
       formatTimeRemaining: function(remainingSeconds) {
-        return window.moment("2015-01-01").startOf('day')
+        return moment("2015-01-01").startOf('day')
           .seconds(remainingSeconds)
           .format('H:mm');
       },

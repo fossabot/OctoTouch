@@ -24,7 +24,7 @@
             <img :src="ufpPreviewURL(file)">
           </div>
           <div class="files__file-information">
-            <p class="files__file-name">{{file.name.replace("ADMFOR25EX_","").replace(".ufp","").replace(".gcode", "")}}</p>
+            <p class="files__file-name"><v-icon color=#fff>mdi-cube-outline</v-icon> {{file.name.replace("ADMFOR25EX_","").replace(".ufp","").replace(".gcode", "")}}</p>
           </div>
         </div>
         <div v-if="file.type == 'folder'">
@@ -32,7 +32,7 @@
             <v-icon size=110px color=#2d3436>mdi-folder</v-icon>
           </div>
           <div class="files__file-information">
-            <p class="files__file-name">{{file.name}}</p>
+            <p class="files__file-name"><v-icon color=#fff>mdi-printer-3d</v-icon> {{file.name}}</p>
           </div>
         </div>
       </div>
@@ -81,8 +81,9 @@
 
 <script lang="ts">
   import Vue from 'vue'
-  import {OctoprintAPI} from '../../octoprint-api/api.ts'
-  import {config} from "../../config.ts"
+  import {OctoprintAPI} from '../../octoprint-api/api'
+  import {config} from "../../config"
+  declare var moment
 
   export default Vue.extend({
     name: 'Files',
@@ -107,7 +108,7 @@
         this.viewingFile = true;
       },
       formatTimeRemaining: function(remainingSeconds) {
-        return window.moment("2015-01-01").startOf('day')
+        return moment("2015-01-01").startOf('day')
           .seconds(remainingSeconds)
           .format('H:mm');
       },

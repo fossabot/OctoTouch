@@ -40,8 +40,8 @@
 
 <script lang="ts">
   import Vue from 'vue'
-  import {OctoprintAPI} from '../../octoprint-api/api.ts'
-  import {config} from "../../config.ts"
+  import {OctoprintAPI} from '../../octoprint-api/api'
+  import {config} from "../../config"
   export default Vue.extend({
     name: 'MainScreen',
     mixins: [OctoprintAPI],

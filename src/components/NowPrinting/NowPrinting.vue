@@ -12,7 +12,10 @@
         <v-icon style="margin-top: -3px;" size=40px color=#fff>mdi-printer-3d</v-icon>
       </v-col>
       <v-col class="now-printing__header-item" style="text-align: right;" align="end">
-        <span style="margin-right: 5vw; ">Layer <span class="now-printing__layer-current">{{job.currentLayer}}</span> of {{job.totalLayers}}</span>
+        <transition name="fade">
+          <span v-if="currentHeader==1" style="margin-right: 5vw; ">Layer <span class="now-printing__layer-current">{{job.currentLayer}}</span> of {{job.totalLayers}}</span>
+          <span v-if="currentHeader==2" style="margin-right: 5vw;">{{ job.eta }}</span>
+        </transition>
       </v-col>
     </v-row>
     
@@ -227,8 +230,9 @@
 
 <script lang="ts">
   import Vue from 'vue'
-  import {OctoprintAPI} from '../../octoprint-api/api.ts'
-  import {config} from "../../config.ts"
+  import {OctoprintAPI} from '../../octoprint-api/api'
+  import {config} from "../../config"
+  declare var moment
   export default Vue.extend({
     name: 'NowPrinting',
     mixins: [OctoprintAPI],
@@ -238,7 +242,7 @@
     },
     methods: {
       formatTimeRemaining: function(remainingSeconds) {
-        return window.moment("2015-01-01").startOf('day')
+        return moment("2015-01-01").startOf('day')
           .seconds(remainingSeconds)
           .format('H:mm');
       },
@@ -322,6 +326,8 @@
             this.job.filename = data.job.file.name
             this.job.filepath = data.job.file.path
             this.job.timeRemaining = data.progress.printTimeLeft
+            const epochComplete = (moment().valueOf() + (this.job.timeRemaining * 1000))
+            this.job.eta = moment(epochComplete).calendar();
             this.job.filamentUsage[0] = this.lengthToWeight(data.job.filament.tool0.length)
             if(data.job.filament.tool1 != undefined) {
               this.job.filamentUsage[1] = this.lengthToWeight(data.job.filament.tool1.length)
@@ -382,10 +388,12 @@
           title: "",
           actions: []
         },
+        currentHeader: 1,
         job: {
           percentCompleted: 0,
           filename: "",
           filepath: "",
+          eta: "",
           filamentUsage: [],
           timeRemaining: 0,
           currentLayer: 0,
