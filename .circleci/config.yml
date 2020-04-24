@@ -7,9 +7,6 @@ jobs:
       name: node/default
     steps:
       - checkout
-      - persist_to_workspace:
-          root: ~/
-          paths: dist_electron
       - node/with-cache:
           steps:
             - run: npm install
