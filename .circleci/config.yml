@@ -30,6 +30,6 @@ workflows:
   build-and-deploy:
     jobs:
       - electron-pack
-      - publish-github-release
+      - publish-github-release:
           requires:
             - electron-pack
