@@ -3,7 +3,7 @@
 </style>
 
 <template>
-  <div fill-height fluid class="control__container">
+  <div fill-height fluid class="container">
     <v-row class="header">
       <v-col @click="goto('/')" class="header-item" align="start">
         <span style="float: left; margin-left: 2vw"><v-icon style="margin-top: -3px" color=#fff size=40px>mdi-arrow-left-circle-outline</v-icon></span>
@@ -98,8 +98,8 @@
 
     <div>
       <transition name="fade">
-        <div @click.self="overlay= ''" v-if="overlay == 'tempAdjust-hotend'" style="display: flex; content-align: center; z-index: 10; position: fixed; top: 0%; left: 0%; width: 100vw; height: 100vh; background-color: rgba(28,35,37,0.9);">
-          <div style="z-index: 12; margin: auto; width: 40vw; height: 70vh; border-radius: 20px; border: 4px solid #fff; padding: 10px; padding-left: 15px; padding-right: 15px; background-color: rgba(28,35,37,0.9);">
+        <div @click.self="overlay= ''" v-if="overlay == 'tempAdjust-hotend'" class="modal-container">
+          <div class="modal-wrapper">
             <v-row>
               <v-col v-ripple @click="nozzleOffset(1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+1</v-col>
               <v-col></v-col>
@@ -124,8 +124,8 @@
         </div> 
       </transition>
       <transition name="fade">
-        <div @click.self="overlay= ''" v-if="overlay == 'tempAdjust-heatedbed'" style="display: flex; content-align: center; z-index: 10; position: fixed; top: 0%; left: 0%; width: 100vw; height: 100vh; background-color: rgba(28,35,37,0.9);">
-          <div style="z-index: 12; margin: auto; width: 40vw; height: 70vh; border-radius: 20px; border: 4px solid #fff; padding: 10px; padding-left: 15px; padding-right: 15px; background-color: rgba(28,35,37,0.9);">
+        <div @click.self="overlay= ''" v-if="overlay == 'tempAdjust-heatedbed'" class="modal-container">
+          <div class="modal-wrapper">
             <v-row>
               <v-col v-ripple @click="bedOffset(1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+1</v-col>
               <v-col></v-col>

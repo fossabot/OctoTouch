@@ -3,7 +3,7 @@
 </style>
 
 <template>
-  <div fill-height fluid class="files__container">
+  <div fill-height fluid class="container">
     <v-row class="header">
       <v-col @click="goto('/')" class="header-item" align="start">
         <span style="float: left; margin-left: 2vw"><v-icon style="margin-top: -3px" color=#fff size=40px>mdi-arrow-left-circle-outline</v-icon></span>

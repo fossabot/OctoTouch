@@ -3,7 +3,7 @@
 </style>
 
 <template>
-  <div @click="resetTimeout()" fill-height fluid class="main-menu__container">
+  <div @click="resetTimeout()" fill-height fluid class="container">
     <v-row class="header" align="center" justify="center">
       <v-col class="header-item" align="start">
         {{printer.name}}

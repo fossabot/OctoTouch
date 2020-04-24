@@ -3,15 +3,15 @@
 </style>
 
 <template>
-  <div fill-height fluid class="now-printing__container">
-    <v-row class="now-printing__header">
-      <v-col class="now-printing__header-item" align="start">
+  <div fill-height fluid class="container">
+    <v-row class="header">
+      <v-col class="header-item" align="start">
         <span style="float: left; margin-left: 5vw">{{printer.name}}</span>
       </v-col>
-      <v-col class="now-printing__header-item" align="center">
+      <v-col class="header-item" align="center">
         <v-icon style="margin-top: -3px;" size=40px color=#fff>mdi-printer-3d</v-icon>
       </v-col>
-      <v-col class="now-printing__header-item" style="text-align: right;" align="end">
+      <v-col class="header-item" style="text-align: right;" align="end">
         <transition name="fade">
           <span v-if="currentHeader==1" style="margin-right: 5vw; ">Layer <span class="now-printing__layer-current">{{job.currentLayer}}</span> of {{job.totalLayers}}</span>
           <span v-if="currentHeader==2" style="margin-right: 5vw;">{{ job.eta }}</span>
