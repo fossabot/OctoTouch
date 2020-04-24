@@ -15,11 +15,6 @@ install:
 jobs:
     include:
         - stage: build
-          if: type = push AND branch != master OR type = pull_request
-          name: 'Building Application ...'
-          script: npm run ng:build
-        - stage: build
-          if: type = push AND branch = master
           name: 'Building Application ...'
           script: npm run pack
          
