@@ -2,16 +2,34 @@ version: 2.1
 orbs:
   node: circleci/node@1.1.6
 jobs:
-  build-electron:
+  electron-pack:
     executor:
       name: node/default
     steps:
       - checkout
+      - persist_to_workspace:
+          root: ~/
+          paths: dist_electron
       - node/with-cache:
           steps:
             - run: npm install
             - run: npm run electron:build
+  publish-github-release:
+    docker:
+      - image: circleci/golang:1.8
+    steps:
+      - attach_workspace:
+          at: ./wks
+      - run:
+          name: "What's in the workspace??"
+          command: |
+            ls ./wks
+    
 workflows:
-    build-and-test:
-      jobs:
-        - build-electron
+  version: 2
+  build-and-deploy:
+    jobs:
+      - electron-pack
+      - publish-github-release
+          requires:
+            - electron-pack
