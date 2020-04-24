@@ -16,7 +16,7 @@ jobs:
     include:
         - stage: build
           name: 'Building Application ...'
-          script: npm run pack
+          script: npm run electron:build
          
 deploy:
   provider: releases
