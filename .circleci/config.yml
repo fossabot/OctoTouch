@@ -14,6 +14,12 @@ jobs:
           steps:
             - run: npm install
             - run: npm run electron:build
+      - list_dir:
+          steps:
+            - run:
+                name: "What's in the directory?"
+                command: |
+                  ls ./
   publish-github-release:
     docker:
       - image: circleci/golang:1.8
