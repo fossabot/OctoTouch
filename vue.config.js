@@ -25,9 +25,6 @@ module.exports = {
         "AppImage",
         "deb"
       ]
-    },
-    "win": {
-      "target": "squirrel"
     }
       }
     }
