@@ -61,6 +61,7 @@
     },
     "rules": {}
   },
+  "main": "background.js",
   "browserslist": [
     "> 1%",
     "last 2 versions",

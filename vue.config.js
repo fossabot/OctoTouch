@@ -11,7 +11,8 @@ module.exports = {
             "AppImage",
             "deb"
           ]
-        }
+        },
+        "extends": null
       }
     }
   }
