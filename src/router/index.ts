@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
-import MainScreen from '../components/MainScreen/MainScreen.vue'
-import Screensaver from "../components/Screensaver/Screensaver.vue"
-import NowPrinting from "../components/NowPrinting/NowPrinting.vue"
-import Control from "../components/Control/Control.vue"
-import Files from "../components/Files/Files.vue"
-import Utilities from "../components/Utilities/Utilities.vue"
+import MainScreen from '../Components/MainScreen/MainScreen.vue'
+import Screensaver from "../Components/Screensaver/Screensaver.vue"
+import NowPrinting from "../Components/NowPrinting/NowPrinting.vue"
+import Control from "../Components/Control/Control.vue"
+import Files from "../Components/Files/Files.vue"
+import Utilities from "../Components/Utilities/Utilities.vue"
 
 Vue.use(VueRouter)
 
