@@ -5,7 +5,7 @@ const Config = {
     filamentThickness: 1.75,
     filamentDensity: 1.24,
     showFolders: false,
-    cura: true
+    cura: true,
 }
 
-export {Config}
+export { Config }

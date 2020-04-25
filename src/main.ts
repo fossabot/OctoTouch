@@ -7,12 +7,14 @@ Vue.use(vuetify)
 
 Vue.config.productionTip = false
 declare global {
-  interface Window { moment: any; }
+    interface Window {
+        moment: any
+    }
 }
-window.moment =  require("moment")
+window.moment = require("moment")
 const router = AppRouter
 new Vue({
     router,
     vuetify,
-    render: h => h(App)
+    render: (h) => h(App),
 }).$mount("#app")

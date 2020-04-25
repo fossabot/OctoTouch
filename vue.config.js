@@ -1,31 +1,25 @@
 const path = require("path")
 
 module.exports = {
-    "transpileDependencies": [
-        "vuetify"
-    ],
+    transpileDependencies: ["vuetify"],
     pluginOptions: {
         electronBuilder: {
             builderOptions: {
-                "appId": "octotouch",
-                "linux": {
-                    "target": [
+                appId: "octotouch",
+                linux: {
+                    target: [
                         {
-                            "target": "deb",
-                            "arch": [
-                                "armv7l"
-                            ]
-                        }
+                            target: "deb",
+                            arch: ["armv7l"],
+                        },
                     ],
-                    "category": "Utility"
+                    category: "Utility",
                 },
-                "extends": null
-            }
-        }
+                extends: null,
+            },
+        },
     },
-    chainWebpack: config => {
-        config.resolve.alias
-            .set("Components", path.resolve(__dirname, "src/Components"))
-            .set("Mixins", path.resolve(__dirname, "src/Mixins"))
-    }
+    chainWebpack: (config) => {
+        config.resolve.alias.set("Components", path.resolve(__dirname, "src/Components")).set("Mixins", path.resolve(__dirname, "src/Mixins"))
+    },
 }

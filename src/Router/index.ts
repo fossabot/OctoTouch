@@ -15,34 +15,34 @@ const routes: Array<RouteConfig> = [
     {
         path: "/",
         name: "Home",
-        component: MainScreen
+        component: MainScreen,
     },
     {
         path: "/now-printing",
         name: "NowPrinting",
-        component: NowPrinting
+        component: NowPrinting,
     },
     {
         path: "/control",
         name: "Control",
-        component: Control
+        component: Control,
     },
     {
         path: "/files",
         name: "Files",
-        component: Files
+        component: Files,
     },
     {
         path: "/utilities",
         name: "Utilities",
-        component: Utilities
-    }
+        component: Utilities,
+    },
 ]
 
 const AppRouter = new VueRouter({
     mode: "history",
     base: process.env.BASE_URL,
-    routes
+    routes,
 })
 
 export default AppRouter
