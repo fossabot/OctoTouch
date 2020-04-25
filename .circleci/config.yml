@@ -2,7 +2,16 @@ version: 2.1
 orbs:
   node: circleci/node@1.1.6
 jobs:
-  build:
+  lint:
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - node/with-cache:
+          steps:
+            - run: npm install
+            - run: npm run lint
+  electron-build:
     executor:
       name: node/default
     steps:
@@ -12,25 +21,45 @@ jobs:
             - run: npm install
             - run: npm run lint
             - run: npm run electron:build
+            - run: cp package.json ./dist_electron
       - persist_to_workspace:
           root: /home/circleci/project
           paths: dist_electron
   publish:
     docker:
-      - image: circleci/golang:1.8
+      - image: circleci/golang:latest
     steps:
       - attach_workspace:
           at: ./wks
       - run:
+          name: "Install dependencies"
+          command: sudo apt-get update && sudo apt-get install -yqq jq
+      - run:
+          name: "Install deployment suite"
+          command: go get github.com/tcnksm/ghr
+      - run:
+          name: "Deploy to GitHub"
+          command: ghr -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME -c $CIRCLE_SHA1 -delete $(cat ./wks/dist_electron/package.json | jq -r .version) wks/dist_electron/*.deb
+      - run:
           name: "What's in the workspace??"
           command: |
             ls ./wks
-    
 workflows:
   version: 2
-  build-and-deploy:
+  lint-and-build:
     jobs:
-      - build
-      - publish:
+      - lint
+      - electron-build:
           requires:
-            - build
+            - lint
+          filters:
+            branches:
+              only:
+                - master
+      - publish-github-release:
+          requires:
+            - electron-build
+          filters:
+            branches:
+              only:
+                - master

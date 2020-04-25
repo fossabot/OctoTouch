@@ -2,4 +2,5 @@ dist_electron/**/*
 dist/**/*
 src/octoprint-api/api.ts
 ./**/*.scss
+node_modules/**/*
 README.md
