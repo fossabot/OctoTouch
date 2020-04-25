@@ -46,28 +46,6 @@
         }
     }
 
-    &__header {
-        height: 10vh !important;
-
-        &-item:first-of-type {
-            z-index: 2;
-            font-size: 20px;
-            font-weight: 500 !important;
-            text-align: center;
-            color: #fff;
-            height: 100%;
-        }
-
-        &-item {
-            z-index: 2;
-            font-size: 20px;
-            font-weight: 300;
-            text-align: center;
-            color: #fff;
-            height: 100%;
-        }
-    }
-
     &__progress {
         top: 11vh;
         position: absolute;

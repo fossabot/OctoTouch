@@ -5,7 +5,7 @@
 <template>
   <div fill-height fluid class="container">
     <v-row class="header">
-      <v-col @click="goto('/')" class="header-item" align="start">
+      <v-col @click="goto('/')" class="header-item">
         <span style="float: left; margin-left: 2vw"><v-icon style="margin-top: -3px" color=#fff size=40px>mdi-arrow-left-circle-outline</v-icon></span>
       </v-col>
       <v-col class="header-item" align="center">
@@ -24,7 +24,7 @@
             <img :src="ufpPreviewURL(file)">
           </div>
           <div class="files__file-information">
-            <p class="files__file-name"><v-icon color=#fff>mdi-cube-outline</v-icon> {{file.name.replace("ADMFOR25EX_","").replace(".ufp","").replace(".gcode", "")}}</p>
+            <p class="files__file-name"><v-icon color=#fff>mdi-cube-outline</v-icon> {{formatFileName(file.name)}}</p>
           </div>
         </div>
         <div v-if="file.type == 'folder'">
@@ -124,7 +124,6 @@
           data.forEach((e,i) => {
             this.files.push(e)
           })
-          //this.openFile(this.files[1]);
         })
       },
       ufpPreviewURL: function(file) {

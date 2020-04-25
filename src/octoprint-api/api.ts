@@ -163,6 +163,7 @@ const OctoprintAPI = {
                 })
             })
         },
+
         //Helper functions
         lengthToWeight: function(length) {
             return (
@@ -184,6 +185,14 @@ const OctoprintAPI = {
                 clearInterval(this.updateInterval)
             }
             this.$router.push(url)
+        },
+        formatFileName: function(name) {
+            if(config.cura == true) {
+                //Cura places a machine identifier at the start of the file name appended by an underscore.
+                return name.split('_').splice(1).join('_').replace(".ufp", "").replace(".gcode","").replace(/_/g, " ")
+            } else {
+                return name.replace(".ufp", "").replace(".gcode","").replace(/_/g, " ")
+            }
         }
     },
     data: function() {

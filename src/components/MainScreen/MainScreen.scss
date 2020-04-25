@@ -5,7 +5,6 @@
     
     &__item {
         padding-top: 10vh !important;
-        max-width: 20px;
         text-align: center;
         color: #fff;
         height: 100%;
@@ -20,18 +19,6 @@
             width: 10vw;
             height: 10vw;
             color: #fff;
-        }
-    }
-
-    &__header {
-        height: 10vh !important;
-        &-item {
-            font-size: 20px;
-            font-weight: 500;
-            max-width: 20px;
-            text-align: center;
-            color: #fff;
-            height: 100%;
         }
     }
 }

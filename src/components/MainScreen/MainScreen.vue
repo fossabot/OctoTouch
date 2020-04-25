@@ -58,7 +58,7 @@
         this.getPrinterStatus().then((data) => {
           this.printer.state = data.state.text
           if(data.state.text == "Printing") {
-            this.goto("/now-printing");
+            //this.goto("/now-printing");
           }
           this.printer.nozzle.actual = data.temperature.tool0.actual
           this.printer.bed.actual = data.temperature.bed.actual
