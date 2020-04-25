@@ -34,7 +34,7 @@ jobs:
           command: sudo apt-get update && sudo apt-get install -yqq jq
       - run:
           name: "Version is..."
-          command: $(cat ./wks/electron_dist/package.json | jq -r .version)
+          command: $(cat ./wks/dist_electron/package.json | jq -r .version)
       - run:
           name: "What's in the workspace??"
           command: |
