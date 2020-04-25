@@ -53,9 +53,8 @@ workflows:
           requires:
             - lint
           filters:
-            branches:
-              only:
-                - master
+            tags:
+              only: /.*/
       - publish-github-release:
           requires:
             - electron-build
