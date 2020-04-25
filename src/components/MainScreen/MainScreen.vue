@@ -3,13 +3,13 @@
 </style>
 
 <template>
-  <div @click="resetTimeout()" fill-height fluid class="main-menu__container">
+  <div @click="resetTimeout()" fill-height fluid class="container">
     <v-row class="header" align="center" justify="center">
       <v-col class="header-item" align="start">
         {{printer.name}}
       </v-col>
       <v-col class="header-item" align="center">
-        {{Math.round(printer.nozzle.actual)}}°C <v-icon style="margin-right: 12px;" color=#fff size=20px>mdi-printer-3d-nozzle</v-icon>{{Math.round(printer.bed.actual)}}°C <v-icon color=#fff size=20px>mdi-radiator</v-icon>
+        {{Math.round(printer.nozzle.actual)}}°C <v-icon style="margin-right: 12px; margin-top: -4px;" color=#fff size=20px>mdi-printer-3d-nozzle</v-icon>{{Math.round(printer.bed.actual)}}°C <v-icon color=#fff style="margin-top: -4px;" size=20px>mdi-radiator</v-icon>
       </v-col>
       <v-col class="header-item" align="end">
         {{printer.state}}
@@ -39,46 +39,46 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue'
-  import {OctoprintAPI} from '../../octoprint-api/api'
-  import {config} from "../../config"
-  export default Vue.extend({
-    name: 'MainScreen',
+import Vue from "vue"
+import {OctoprintAPI} from "../../octoprint-api/api"
+import {config} from "../../config"
+export default Vue.extend({
+    name: "MainScreen",
     mixins: [OctoprintAPI],
     mounted: function() {
-      this.printer.name = config.printerName
-      this.update();
-      this.updateInterval = setInterval(this.update, 2500);
+        this.printer.name = config.printerName
+        this.update()
+        this.updateInterval = setInterval(this.update, 2500)
     },
     methods: {
-      resetTimeout: function() {
-        return 1
-      },
-      update: function() {
-        this.getPrinterStatus().then((data) => {
-          this.printer.state = data.state.text
-          if(data.state.text == "Printing") {
-            this.goto("/now-printing");
-          }
-          this.printer.nozzle.actual = data.temperature.tool0.actual
-          this.printer.bed.actual = data.temperature.bed.actual
-        })
-      }
+        resetTimeout: function() {
+            return 1
+        },
+        update: function() {
+            this.getPrinterStatus().then((data) => {
+                this.printer.state = data.state.text
+                if(data.state.text == "Printing") {
+                    this.goto("/now-printing")
+                }
+                this.printer.nozzle.actual = data.temperature.tool0.actual
+                this.printer.bed.actual = data.temperature.bed.actual
+            })
+        }
     },
     data: function() {
-      return {
-        screenTimeout: null,
-        printer: {
-          name: "",
-          state: "",
-          nozzle: {
-            actual: 0
-          },
-          bed: {
-            actual: 0
-          }
+        return {
+            screenTimeout: null,
+            printer: {
+                name: "",
+                state: "",
+                nozzle: {
+                    actual: 0
+                },
+                bed: {
+                    actual: 0
+                }
+            }
         }
-      };
     }
-  })
+})
 </script>

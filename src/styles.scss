@@ -1,38 +1,15 @@
-.modal {
-    &-container {
-        display: flex;
-        content-align: center;
-        z-index: 10;
-        position: fixed;
-        top: 0%;
-        left: 0%;
-        width: 100vw;
-        height: 100vh;
-        background-color: rgba(28,35,37,0.9);
-    }
+/**
+ *
+ * Central styles for Vuetify animations,
+ * modals, headers, and menus.
+ *
+ */
 
-    &-wrapper {
-        color: #fff;
-        z-index: 12;
-        margin: auto;
-        width: 40vw;
-        height: 70vh;
-        border-radius: 20px;
-        padding: 10px;
-        padding-left: 15px;
-        padding-right: 15px; 
-        background-color: rgba(28,35,37,0.9);
-    }
-
-    &-title {
-        color: #fff;
-        font-size: 20px;
-    }
-
-    &-close {
-        float: right;
-        margin-right: -2px;
-    }
+.fade-enter-active, .fade-leave-active {
+transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+opacity: 0;
 }
 
 @-webkit-keyframes spin {
@@ -63,10 +40,10 @@
 }
 
 .barberpole {
-    background-image: 
+    background-image:
     repeating-linear-gradient(
-        -45deg, 
-        transparent, 
+        -45deg,
+        transparent,
         transparent 1rem,
         #E8B763 1rem,
         #E8B763 2rem
@@ -79,6 +56,49 @@
     animation: spin 1.5s infinite linear;
 }
 
+.modal {
+    &-container {
+        display: flex;
+        z-index: 10;
+        position: fixed;
+        top: 0%;
+        left: 0%;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(28,35,37,0.9);
+    }
+
+    &-wrapper {
+        color: #fff;
+        z-index: 12;
+        margin: auto;
+        width: 40vw;
+        height: 70vh;
+        border-radius: 20px;
+        padding: 10px;
+        padding-left: 15px;
+        padding-right: 15px;
+        background-color: rgba(28,35,37,0.9);
+    }
+
+    &-title {
+        color: #fff;
+        font-size: 20px;
+    }
+
+    &-close {
+        float: right;
+        margin-right: -2px;
+    }
+}
+
+.container {
+    background-color: #2d3436;
+    overflow: hidden;
+    padding: 0 !important;
+    height: 100vh;
+}
+
 .header {
         height: 10vh !important;
 
@@ -86,22 +106,22 @@
             z-index: 2;
             font-size: 20px;
             font-weight: 500 !important;
-            text-align: center;
+            text-align: left;
             color: #fff;
             height: 100%;
             float: left;
-            margin-left: 2vw;
+            padding-left: 5vw;
         }
 
         &-item:last-of-type {
             z-index: 2;
             font-size: 20px;
             font-weight: 500 !important;
-            text-align: center;
+            text-align: right;
             color: #fff;
             height: 100%;
             float: left;
-            margin-left: 2vw;
+            padding-right: 5vw;
         }
 
         &-item {

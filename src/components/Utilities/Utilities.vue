@@ -39,46 +39,46 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue'
-  import {OctoprintAPI} from '../../octoprint-api/api'
-  import {config} from "../../config"
-  export default Vue.extend({
-    name: 'Utilities',
+import Vue from "vue"
+import {OctoprintAPI} from "../../octoprint-api/api"
+import {config} from "../../config"
+export default Vue.extend({
+    name: "Utilities",
     mixins: [OctoprintAPI],
     mounted: function() {
-      this.printer.name = config.printerName
-      this.update();
-      this.updateInterval = setInterval(this.update, 2500);
+        this.printer.name = config.printerName
+        this.update()
+        this.updateInterval = setInterval(this.update, 2500)
     },
     methods: {
-      resetTimeout: function() {
-        return 1
-      },
-      update: function() {
-        this.getPrinterStatus().then((data) => {
-          this.printer.state = data.state.text
-          if(data.state.text == "Printing") {
-            this.goto("/now-printing");
-          }
-          this.printer.nozzle.actual = data.temperature.tool0.actual
-          this.printer.bed.actual = data.temperature.bed.actual
-        })
-      }
+        resetTimeout: function() {
+            return 1
+        },
+        update: function() {
+            this.getPrinterStatus().then((data) => {
+                this.printer.state = data.state.text
+                if(data.state.text == "Printing") {
+                    this.goto("/now-printing")
+                }
+                this.printer.nozzle.actual = data.temperature.tool0.actual
+                this.printer.bed.actual = data.temperature.bed.actual
+            })
+        }
     },
     data: function() {
-      return {
-        screenTimeout: null,
-        printer: {
-          name: "",
-          state: "",
-          nozzle: {
-            actual: 0
-          },
-          bed: {
-            actual: 0
-          }
+        return {
+            screenTimeout: null,
+            printer: {
+                name: "",
+                state: "",
+                nozzle: {
+                    actual: 0
+                },
+                bed: {
+                    actual: 0
+                }
+            }
         }
-      };
     }
-  })
+})
 </script>

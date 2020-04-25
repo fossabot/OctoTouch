@@ -3,16 +3,16 @@
 </style>
 
 <template>
-  <div fill-height fluid class="files__container">
+  <div fill-height fluid class="container">
     <v-row class="header">
-      <v-col @click="goto('/')" class="header-item" align="start">
-        <span style="float: left; margin-left: 2vw"><v-icon style="margin-top: -3px" color=#fff size=40px>mdi-arrow-left-circle-outline</v-icon></span>
+      <v-col @click="goto('/')" class="header-item">
+        <span><v-icon color=#fff size=35px>mdi-arrow-left-circle-outline</v-icon></span>
       </v-col>
-      <v-col class="header-item" align="center">
-        <v-icon style="margin-top: -3px;" size=40px color=#fff>mdi-folder-multiple</v-icon>
+      <v-col class="header-item">
+        <v-icon size=30px color=#fff>mdi-folder-multiple</v-icon>
       </v-col>
-      <v-col class="header-item" align="end">
-        <span style="float: right; margin-right: 5vw">{{printer.name}}</span>
+      <v-col class="header-item">
+        <span>{{printer.name}}</span>
       </v-col>
     </v-row>
 
@@ -20,19 +20,20 @@
     <div class="files__files">
       <div class="files__file" @click="openFile(file)" v-for="(file, idx) in files" v-bind:key="idx">
         <div v-if="file.type == 'machinecode'">
-          <div class="files__file-image">
-            <img :src="ufpPreviewURL(file)">
-          </div>
           <div class="files__file-information">
-            <p class="files__file-name"><v-icon color=#fff>mdi-cube-outline</v-icon> {{file.name.replace("ADMFOR25EX_","").replace(".ufp","").replace(".gcode", "")}}</p>
+            <p class="files__file-name"><v-icon style="margin-top: -0.4vh" color=#fff size=30px>mdi-cube-outline</v-icon> {{formatFileName(file.name)}}</p>
+            <div class="files__file-details">
+              {{formatTimeRemaining(file.gcodeAnalysis.estimatedPrintTime)}}<span class="files__file-details-small">h</span>
+              {{(file.size / 1000000).toFixed(1)}}<span class="files__file-details-small">mb</span>
+            </div>
           </div>
         </div>
         <div v-if="file.type == 'folder'">
-          <div class="files__file-image">
-            <v-icon size=110px color=#2d3436>mdi-folder</v-icon>
-          </div>
           <div class="files__file-information">
-            <p class="files__file-name"><v-icon color=#fff>mdi-printer-3d</v-icon> {{file.name}}</p>
+            <p class="files__file-name"><v-icon style="margin-top: -0.4vh" color=#fff size=30px>mdi-folder</v-icon> {{file.name}}</p>
+            <div class="files__file-details">
+              {{(file.children)}}<span class="files__file-details-small">items</span>
+            </div>
           </div>
         </div>
       </div>
@@ -80,70 +81,69 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue'
-  import {OctoprintAPI} from '../../octoprint-api/api'
-  import {config} from "../../config"
-  declare var moment
+import Vue from "vue"
+import {OctoprintAPI} from "../../octoprint-api/api"
+import {config} from "../../config"
+declare var moment
 
-  export default Vue.extend({
-    name: 'Files',
+export default Vue.extend({
+    name: "Files",
     mixins: [OctoprintAPI],
     mounted: function() {
-      this.update()
-      this.printer.name = config.printerName
-      this.updateInterval = setInterval(this.update, 2500);
+        this.update()
+        this.printer.name = config.printerName
+        this.updateInterval = setInterval(this.update, 2500)
 
-      //Retrieve files and display on page...
-      this.getFiles().then((data) => {
-        this.files = []
-        data.forEach((e,i) => {
-          this.files.push(e)
-        })
+        //Retrieve files and display on page...
+        this.getFiles().then((data) => {
+            this.files = []
+            data.forEach((e) => {
+                this.files.push(e)
+            })
         //this.openFile(this.files[1]);
-      })
+        })
     },
     methods: {
-      openFile: function(file) {
-        this.fileBeingViewed = file;
-        this.viewingFile = true;
-      },
-      formatTimeRemaining: function(remainingSeconds) {
-        return moment("2015-01-01").startOf('day')
-          .seconds(remainingSeconds)
-          .format('H:mm');
-      },
-      update: function() {
-        this.getJobStatus().then((data) => {
-          this.printer.state = data.state
-          if(data.state == "Printing" || data.state == "Starting") {
-            this.$router.push("/now-printing");
-          }
-        })
-        this.getFiles().then((data) => {
-          this.files = []
-          data.forEach((e,i) => {
-            this.files.push(e)
-          })
-          //this.openFile(this.files[1]);
-        })
-      },
-      ufpPreviewURL: function(file) {
-        return config.baseURL.replace('/api/', '') + '/plugin/UltimakerFormatPackage/thumbnail/' + file.name.replace('.ufp.gcode','.png')
-      }
+        openFile: function(file) {
+            this.fileBeingViewed = file
+            this.viewingFile = true
+        },
+        formatTimeRemaining: function(remainingSeconds) {
+            return moment("2015-01-01").startOf("day")
+                .seconds(remainingSeconds)
+                .format("H:mm")
+        },
+        update: function() {
+            this.getJobStatus().then((data) => {
+                this.printer.state = data.state
+                if(data.state == "Printing" || data.state == "Starting") {
+                    //this.$router.push("/now-printing");
+                }
+            })
+            this.getFiles().then((data) => {
+                this.files = []
+                data.forEach((e) => {
+                    this.files.push(e)
+                })
+            })
+        },
+        ufpPreviewURL: function(file) {
+            return config.baseURL.replace("/api/", "") + "/plugin/UltimakerFormatPackage/thumbnail/" + file.name.replace(".ufp.gcode",".png")
+        }
     },
     computed: {
     },
     data: function() {
-      return {
-        printer: {
-          name: "",
-          state: ""
-        },
-        freeSpace: "",
-        files: [],
-        viewingFile: false,
-        fileBeingViewed: null
-      };
+        return {
+            printer: {
+                name: "",
+                state: ""
+            },
+            freeSpace: "",
+            files: [],
+            viewingFile: false,
+            fileBeingViewed: null
+        }
     }
-  })
+})
 </script>

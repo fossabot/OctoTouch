@@ -1,40 +1,40 @@
 {
-  "compilerOptions": {
-    "target": "es5",
-    "module": "esnext",
-    "strict": false,
-    "jsx": "preserve",
-    "importHelpers": true,
-    "moduleResolution": "node",
-    "experimentalDecorators": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
-    "baseUrl": ".",
-    "types": [
-      "webpack-env",
-      "vuetify"
-    ],
-    "paths": {
-      "@/*": [
-        "src/*"
-      ]
+    "compilerOptions": {
+        "target": "es5",
+        "module": "esnext",
+        "strict": false,
+        "jsx": "preserve",
+        "importHelpers": true,
+        "moduleResolution": "node",
+        "experimentalDecorators": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "sourceMap": true,
+        "baseUrl": ".",
+        "types": [
+            "webpack-env",
+            "vuetify"
+        ],
+        "paths": {
+            "@/*": [
+                "src/*"
+            ]
+        },
+        "lib": [
+            "esnext",
+            "dom",
+            "dom.iterable",
+            "scripthost"
+        ]
     },
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable",
-      "scripthost"
+    "exclude": [
+        "node_modules"
+    ],
+    "@typescript-eslint/no-this-alias": [
+        "error",
+        {
+            "allowDestructuring": true, // Allow `const { props, state } = this`; false by default
+            "allowedNames": ["vm"] // Allow `const self = this`; `[]` by default
+        }
     ]
-  },
-  "exclude": [
-    "node_modules"
-  ],
-  "@typescript-eslint/no-this-alias": [
-    "error",
-    {
-      "allowDestructuring": true, // Allow `const { props, state } = this`; false by default
-      "allowedNames": ["vm"] // Allow `const self = this`; `[]` by default
-    }
-  ]
 }

@@ -3,18 +3,18 @@
 </style>
 
 <template>
-  <div fill-height fluid class="now-printing__container">
-    <v-row class="now-printing__header">
-      <v-col class="now-printing__header-item" align="start">
-        <span style="float: left; margin-left: 5vw">{{printer.name}}</span>
+  <div fill-height fluid class="container">
+    <v-row class="header">
+      <v-col class="header-item" align="start">
+        {{printer.name}}
       </v-col>
-      <v-col class="now-printing__header-item" align="center">
-        <v-icon style="margin-top: -3px;" size=40px color=#fff>mdi-printer-3d</v-icon>
+      <v-col class="header-item" align="center">
+        <v-icon size=30px color=#fff>mdi-printer-3d</v-icon>
       </v-col>
-      <v-col class="now-printing__header-item" style="text-align: right;" align="end">
-        <transition name="fade">
-          <span v-if="currentHeader==1" style="margin-right: 5vw; ">Layer <span class="now-printing__layer-current">{{job.currentLayer}}</span> of {{job.totalLayers}}</span>
-          <span v-if="currentHeader==2" style="margin-right: 5vw;">{{ job.eta }}</span>
+      <v-col class="header-item" align="end">
+        <transition name="fade" mode="out-in">
+          <span style="font-weight: 300" v-if="currentHeader==1">Layer <span class="now-printing__layer-current">{{job.currentLayer}}</span> of {{job.totalLayers}}</span>
+          <p style="font-weight: 300" v-if="currentHeader==2">{{ job.eta }}</p>
         </transition>
       </v-col>
     </v-row>
@@ -33,7 +33,7 @@
       </v-col>
       <v-col @click="overlay='print-picture'" class="now-printing__progress-below now-printing__progress-details" style="color: white; font-size: 40px; line-height: 20px;" :sm="10" v-ripple align="end">
         <h1 class="now-printing__details-title">
-          {{job.filename.replace("ADMFOR25EX_","").replace("LM_","").replace(".ufp", "").replace(".gcode","").replace(/_/g, " ")}}
+          {{formatFileName(job.filename)}}
         </h1>
         <h3 class="now-printing__details-subtitle">
           {{job.filamentUsage[0]}}g <v-icon size=20px color=white>mdi-printer-3d-nozzle</v-icon><v-icon v-if="job.filamentUsage.length > 1" size=20px color=white>mdi-numeric-0-box</v-icon>
@@ -94,32 +94,32 @@
       </v-row>
     </div>
 
-    <div class="now-printing__details" v-if="screen == 'utilities'">
-      <v-row class="now-printing__overview">
-        <v-col @click="screen = 'printing'" v-ripple class="now-printing__overview-item">
-          <v-icon size=15vh color=#dfe6e9>mdi-arrow-left</v-icon><br>
-          <span style="color: #dfe6e9;">Back</span>
-        </v-col>
-        <v-col @click="screen = 'flowrate'" v-ripple class="now-printing__overview-item">
-          <v-icon size=15vh color=#dfe6e9>mdi-cog-clockwise</v-icon><br>
-          <span style="color: #dfe6e9;">Adjust Flowrate</span>
-        </v-col>
-        <v-col @click="screen = 'feedrate'" v-ripple class="now-printing__overview-item">
-          <v-icon size=15vh color=#dfe6e9>mdi-speedometer</v-icon><br>
-          <span style="color: #dfe6e9;">Print Speed</span>
-        </v-col>
-      </v-row>
-      <v-row class="now-printing__overview">
-        <v-col @click="emergencyStop()" v-ripple class="now-printing__overview-item">
-          <v-icon size=15vh color=#ff7675>mdi-stop-circle</v-icon><br>
-          <span style="color: #ff7675;">Emergency Stop</span>
-        </v-col>
-      </v-row>
-    </div>
-
     <!-- Utility menus, collapse when not working on -->
     <!-- these div tags are useless, only point is code folding :) -->
-    <div>
+    <transition name="fade">
+      <!-- Main screen -->
+      <div class="now-printing__details" v-if="screen == 'utilities'">
+        <v-row class="now-printing__overview">
+          <v-col @click="screen = 'printing'" v-ripple class="now-printing__overview-item">
+            <v-icon size=15vh color=#dfe6e9>mdi-arrow-left</v-icon><br>
+            <span style="color: #dfe6e9;">Back</span>
+          </v-col>
+          <v-col @click="screen = 'flowrate'" v-ripple class="now-printing__overview-item">
+            <v-icon size=15vh color=#dfe6e9>mdi-cog-clockwise</v-icon><br>
+            <span style="color: #dfe6e9;">Adjust Flowrate</span>
+          </v-col>
+          <v-col @click="screen = 'feedrate'" v-ripple class="now-printing__overview-item">
+            <v-icon size=15vh color=#dfe6e9>mdi-speedometer</v-icon><br>
+            <span style="color: #dfe6e9;">Print Speed</span>
+          </v-col>
+        </v-row>
+        <v-row class="now-printing__overview">
+          <v-col @click="emergencyStop()" v-ripple class="now-printing__overview-item">
+            <v-icon size=15vh color=#ff7675>mdi-stop-circle</v-icon><br>
+            <span style="color: #ff7675;">Emergency Stop</span>
+          </v-col>
+        </v-row>
+      </div>
 
       <!-- Flowrate adj. screen -->
       <div class="now-printing__details" v-if="screen == 'flowrate'">
@@ -156,267 +156,281 @@
           </v-col>
         </v-row>
       </div>
-    </div>
+    </transition>
 
     <!-- Utility OVERLAYS, collapse when not working on -->
     <!-- these div tags are useless, only point is code folding :) -->
     <div>
+    <transition name="fade">
       <div @click.self="overlay= ''" v-if="overlay == 'print-picture'" style="display: flex; content-align: center; z-index: 10; position: fixed; top: 0%; left: 0%; width: 100vw; height: 100vh; background-color: rgba(28,35,37,0.9);">
         <div style="text-align: center; z-index: 12; margin: auto; width: 40vw; height: 70vh; border-radius: 20px; border: 4px solid #fff; padding: 10px; padding-left: 15px; padding-right: 15px; background-color: rgba(28,35,37,0.9);">
           <img style="width: 35vw;" :src="ufpPreviewURL(job.filepath)">
         </div>
       </div>
-      <div @click.self="overlay= ''" v-if="overlay == 'tempAdjust-hotend'" style="display: flex; content-align: center; z-index: 10; position: fixed; top: 0%; left: 0%; width: 100vw; height: 100vh; background-color: rgba(28,35,37,0.9);">
-        <div style="z-index: 12; margin: auto; width: 40vw; height: 70vh; border-radius: 20px; border: 4px solid #fff; padding: 10px; padding-left: 15px; padding-right: 15px; background-color: rgba(28,35,37,0.9);">
-          <v-row>
-            <v-col v-ripple @click="nozzleOffset(1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+1</v-col>
-            <v-col></v-col>
-            <v-col v-ripple @click="nozzleOffset(10)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+10</v-col>
-          </v-row>
-          <v-row style="margin-top: 0px; margin-bottom: 0px;">
-            <v-col></v-col>
-            <v-col justify=center align=center style="color: #fff; font-size: 12vh; font-weight: 300;">{{printer.nozzle.target}}</v-col>
-            <v-col></v-col>
-          </v-row>
-          <v-row style="border-bottom: 4px solid #fff;">
-            <v-col v-ripple @click="nozzleOffset(-1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">-1</v-col>
-            <v-col></v-col>
-            <v-col v-ripple @click="nozzleOffset(-10)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">-10</v-col>
-          </v-row>
-          <v-row>
-            <v-col></v-col>
-            <v-col v-ripple @click.self="overlay= ''" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">back</v-col>
-            <v-col></v-col>
-          </v-row>
+        <div @click.self="overlay= ''" v-if="overlay == 'tempAdjust-hotend'" style="display: flex; content-align: center; z-index: 10; position: fixed; top: 0%; left: 0%; width: 100vw; height: 100vh; background-color: rgba(28,35,37,0.9);">
+          <div style="z-index: 12; margin: auto; width: 40vw; height: 70vh; border-radius: 20px; border: 4px solid #fff; padding: 10px; padding-left: 15px; padding-right: 15px; background-color: rgba(28,35,37,0.9);">
+            <v-row>
+              <v-col v-ripple @click="nozzleOffset(1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+1</v-col>
+              <v-col></v-col>
+              <v-col v-ripple @click="nozzleOffset(10)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+10</v-col>
+            </v-row>
+            <v-row style="margin-top: 0px; margin-bottom: 0px;">
+              <v-col></v-col>
+              <v-col justify=center align=center style="color: #fff; font-size: 12vh; font-weight: 300;">{{printer.nozzle.target}}</v-col>
+              <v-col></v-col>
+            </v-row>
+            <v-row style="border-bottom: 4px solid #fff;">
+              <v-col v-ripple @click="nozzleOffset(-1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">-1</v-col>
+              <v-col></v-col>
+              <v-col v-ripple @click="nozzleOffset(-10)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">-10</v-col>
+            </v-row>
+            <v-row>
+              <v-col></v-col>
+              <v-col v-ripple @click.self="overlay= ''" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">back</v-col>
+              <v-col></v-col>
+            </v-row>
+          </div>
         </div>
-      </div>
-      <div @click.self="overlay= ''" v-if="overlay == 'tempAdjust-heatedbed'" style="display: flex; content-align: center; z-index: 10; position: fixed; top: 0%; left: 0%; width: 100vw; height: 100vh; background-color: rgba(28,35,37,0.9);">
-        <div style="z-index: 12; margin: auto; width: 40vw; height: 70vh; border-radius: 20px; border: 4px solid #fff; padding: 10px; padding-left: 15px; padding-right: 15px; background-color: rgba(28,35,37,0.9);">
-          <v-row>
-            <v-col v-ripple @click="bedOffset(1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+1</v-col>
-            <v-col></v-col>
-            <v-col v-ripple @click="bedOffset(10)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+10</v-col>
-          </v-row>
-          <v-row style="margin-top: 0px; margin-bottom: 0px;">
-            <v-col></v-col>
-            <v-col justify=center align=center style="color: #fff; font-size: 12vh; font-weight: 300;">{{printer.bed.target}}</v-col>
-            <v-col></v-col>
-          </v-row>
-          <v-row style="border-bottom: 4px solid #fff;">
-            <v-col v-ripple @click="bedOffset(-1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">-1</v-col>
-            <v-col></v-col>
-            <v-col v-ripple @click="bedOffset(-10)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">-10</v-col>
-          </v-row>
-          <v-row>
-            <v-col></v-col>
-            <v-col v-ripple @click.self="overlay= ''" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">back</v-col>
-            <v-col></v-col>
-          </v-row>
-        </div>
-      </div>
-    </div>
 
-    <div class="now-printing__details now-printing__dialog" v-if="screen == 'dialog'">
-      <h1 class="now-printing__dialog-title">{{currentDialog.title}}</h1>
-      <v-row class="now-printing__dialog-actions">
-        <v-col @click="action.action" class="now-printing__dialog-action" :class="goodOrBad(action)" v-ripple v-for="action in currentDialog.actions" v-bind:key="action.action">
-          <v-icon :color="goodOrBadIcon(action)" size=15vh>{{action.icon}}</v-icon><br>
-          <span>{{action.text}}</span>
-        </v-col>
-      </v-row>
+        <div class="now-printing__details now-printing__dialog" v-if="screen == 'dialog'">
+          <h1 class="now-printing__dialog-title">{{currentDialog.title}}</h1>
+          <v-row class="now-printing__dialog-actions">
+            <v-col @click="action.action" class="now-printing__dialog-action" :class="goodOrBad(action)" v-ripple v-for="action in currentDialog.actions" v-bind:key="action.action">
+              <v-icon :color="goodOrBadIcon(action)" size=15vh>{{action.icon}}</v-icon><br>
+              <span>{{action.text}}</span>
+            </v-col>
+          </v-row>
+        </div>
+      </transition>
+      <transition name="fade">
+        <div @click.self="overlay= ''" v-if="overlay == 'tempAdjust-heatedbed'" style="display: flex; content-align: center; z-index: 10; position: fixed; top: 0%; left: 0%; width: 100vw; height: 100vh; background-color: rgba(28,35,37,0.9);">
+          <div style="z-index: 12; margin: auto; width: 40vw; height: 70vh; border-radius: 20px; border: 4px solid #fff; padding: 10px; padding-left: 15px; padding-right: 15px; background-color: rgba(28,35,37,0.9);">
+            <v-row>
+              <v-col v-ripple @click="bedOffset(1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+1</v-col>
+              <v-col></v-col>
+              <v-col v-ripple @click="bedOffset(10)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+10</v-col>
+            </v-row>
+            <v-row style="margin-top: 0px; margin-bottom: 0px;">
+              <v-col></v-col>
+              <v-col justify=center align=center style="color: #fff; font-size: 12vh; font-weight: 300;">{{printer.bed.target}}</v-col>
+              <v-col></v-col>
+            </v-row>
+            <v-row style="border-bottom: 4px solid #fff;">
+              <v-col v-ripple @click="bedOffset(-1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">-1</v-col>
+              <v-col></v-col>
+              <v-col v-ripple @click="bedOffset(-10)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">-10</v-col>
+            </v-row>
+            <v-row>
+              <v-col></v-col>
+              <v-col v-ripple @click.self="overlay= ''" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">back</v-col>
+              <v-col></v-col>
+            </v-row>
+          </div>
+        </div>
+      </transition>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-  import Vue from 'vue'
-  import {OctoprintAPI} from '../../octoprint-api/api'
-  import {config} from "../../config"
-  declare var moment
-  export default Vue.extend({
-    name: 'NowPrinting',
+import Vue from "vue"
+import {OctoprintAPI} from "../../octoprint-api/api"
+import {config} from "../../config"
+declare var moment
+export default Vue.extend({
+    name: "NowPrinting",
     mixins: [OctoprintAPI],
     mounted: function() {
-      this.update()
-      this.updateInterval = setInterval(this.update, 2500);
+        this.update()
+        this.updateInterval = setInterval(this.update, 2500)
     },
     methods: {
-      formatTimeRemaining: function(remainingSeconds) {
-        return moment("2015-01-01").startOf('day')
-          .seconds(remainingSeconds)
-          .format('H:mm');
-      },
-      showDialog: function(title, actions) {
-        this.oldScreen = this.screen
-        this.screen = "dialog"
-        this.currentDialog.title = title
-        this.currentDialog.actions = actions
-      },
-      cancelDialog: function() {
-        this.showDialog("Are you sure?", [
-          {
-            text: "Cancel Print",
-            icon: "mdi-stop-circle",
-            color: "red",
-            action: () => {
-              this.cancelPrint()
+        formatTimeRemaining: function(remainingSeconds) {
+            return moment("2015-01-01").startOf("day")
+                .seconds(remainingSeconds)
+                .format("H:mm")
+        },
+        showDialog: function(title, actions) {
+            this.oldScreen = this.screen
+            this.screen = "dialog"
+            this.currentDialog.title = title
+            this.currentDialog.actions = actions
+        },
+        cancelDialog: function() {
+            this.showDialog("Are you sure?", [
+                {
+                    text: "",
+                    icon: "mdi-arrow-left",
+                    color: "neutral",
+                    action: () => {
+                        this.screen = this.oldScreen
+                        this.oldScreen = this.screen
+                    }
+                },
+                {
+                    text: "Cancel Print",
+                    icon: "mdi-close-circle",
+                    color: "red",
+                    action: () => {
+                        this.cancelPrint()
+                    }
+                } 
+            ])
+        },
+        ufpPreviewURL: function(file) {
+            return config.baseURL.replace("/api/", "") + "/plugin/UltimakerFormatPackage/thumbnail/" + file.replace(".ufp.gcode",".png")
+        },
+        nozzleOffset: function(temp) {
+            if(this.printer.nozzle.target + temp >= 0 && this.printer.nozzle.target + temp <= 275) {
+                this.printer.nozzle.target = this.printer.nozzle.target + temp
             }
-          }, 
-          {
-            text: "Back",
-            icon: "mdi-arrow-left",
-            color: "neutral",
-            action: () => {
-              this.screen = this.oldScreen
-              this.oldScreen = this.screen
+            this.setNozzleTemp(this.printer.nozzle.target).then(() => {
+                this.update()
+            })
+        },
+        bedOffset: function(temp) {
+            if(this.printer.bed.target + temp >= 0 && this.printer.bed.target + temp <= 275) {
+                this.printer.bed.target = this.printer.bed.target + temp
             }
-          }, 
-        ])
-      },
-      ufpPreviewURL: function(file) {
-        return config.baseURL.replace('/api/', '') + '/plugin/UltimakerFormatPackage/thumbnail/' + file.replace('.ufp.gcode','.png')
-      },
-      nozzleOffset: function(temp) {
-        if(this.printer.nozzle.target + temp >= 0 && this.printer.nozzle.target + temp <= 275) {
-          this.printer.nozzle.target = this.printer.nozzle.target + temp
-        }
-        this.setNozzleTemp(this.printer.nozzle.target).then(() => {
-          this.update()
-        });
-      },
-      bedOffset: function(temp) {
-        if(this.printer.bed.target + temp >= 0 && this.printer.bed.target + temp <= 275) {
-          this.printer.bed.target = this.printer.bed.target + temp
-        }
-        this.setBedTemp(this.printer.bed.target).then(() => {
-          this.update()
-        });
-      },
-      update: function() {
-        this.getPrinterStatus().then((data) => {
-          this.printer.nozzle.target = data.temperature.tool0.target
-          this.printer.nozzle.actual = data.temperature.tool0.actual
-          this.printer.bed.target = data.temperature.bed.target
-          this.printer.bed.actual = data.temperature.bed.actual
+            this.setBedTemp(this.printer.bed.target).then(() => {
+                this.update()
+            })
+        },
+        update: function() {
+            this.loop = this.loop + 1
+            if(this.loop == 5) {
+                if(this.currentHeader == 1) {
+                    this.currentHeader = 2
+                } else {
+                    this.currentHeader = 1
+                }
+                this.loop = 1
+            }
+            this.getPrinterStatus().then((data) => {
+                this.printer.nozzle.target = data.temperature.tool0.target
+                this.printer.nozzle.actual = data.temperature.tool0.actual
+                this.printer.bed.target = data.temperature.bed.target
+                this.printer.bed.actual = data.temperature.bed.actual
 
-          if(Math.abs(this.printer.nozzle.actual - this.printer.nozzle.target) > 10 || Math.abs(this.printer.bed.actual - this.printer.bed.target) > 3) {
-            if(this.printer.nozzle.actual > this.printer.nozzle.target || this.printer.bed.actual > this.printer.bed.target) {
-              this.printer.isCooling = true;
-              this.printer.isHeating = false;
+                if(Math.abs(this.printer.nozzle.actual - this.printer.nozzle.target) > 10 || Math.abs(this.printer.bed.actual - this.printer.bed.target) > 3) {
+                    if(this.printer.nozzle.actual > this.printer.nozzle.target || this.printer.bed.actual > this.printer.bed.target) {
+                        this.printer.isCooling = true
+                        this.printer.isHeating = false
+                    } else {
+                        this.printer.isHeating = true
+                        this.printer.isCooling = false
+                    }
+                } else {
+                    this.printer.isHeating = false
+                    this.printer.isCooling = false
+                }
+            }).then(() => {
+                this.getJobStatus().then((data) => {
+                    this.printer.state = data.state
+                    if(data.state == "Operational" || data.state == "Cancelling") {
+                        this.goto("/")
+                    }
+                    this.printer.name = config.printerName
+                    if(this.printer.isHeating == true || this.printer.isCooling == true) {
+                        this.job.percentCompleted = 100
+                    } else {
+                        this.job.percentCompleted = data.progress.completion
+                    }
+                    this.job.filename = data.job.file.name
+                    this.job.filepath = data.job.file.path
+                    this.job.timeRemaining = data.progress.printTimeLeft
+                    const epochComplete = (moment().valueOf() + (this.job.timeRemaining * 1000))
+                    this.job.eta = moment(epochComplete).calendar()
+                    this.job.filamentUsage[0] = this.lengthToWeight(data.job.filament.tool0.length)
+                    if(data.job.filament.tool1 != undefined) {
+                        this.job.filamentUsage[1] = this.lengthToWeight(data.job.filament.tool1.length)
+                    }
+                })
+            })
+            this.getLayerStatus().then((data) => {
+                this.job.currentLayer = data.layer.current
+                this.job.totalLayers = data.layer.total
+                if(data.fanSpeed == "-" || data.fanSpeed == "Off") {
+                    this.printer.fan.speed = 0
+                } else {
+                    this.printer.fan.speed = parseInt(data.fanSpeed.split("%")[0])
+                }
+            })
+        },
+        goodOrBad: function(action) {
+            if(action.color == "red") {
+                return "now-printing__dialog-action-bad"
+            } else if(action.color == "green") {
+                return "now-printing__dialog-action-good"
             } else {
-              this.printer.isHeating = true;
-              this.printer.isCooling = false;
+                return "now-printing__dialog-action-neutral"
             }
-          } else {
-            this.printer.isHeating = false;
-            this.printer.isCooling = false;
-          }
-        }).then(() => {
-          this.getJobStatus().then((data) => {
-            this.printer.state = data.state
-            if(data.state == "Operational" || data.state == "Cancelling") {
-              this.goto("/");
-            }
-            this.printer.name = config.printerName
-            if(this.printer.isHeating == true || this.printer.isCooling == true) {
-              this.job.percentCompleted = 100
+        },
+        goodOrBadIcon: function(action) {
+            if(action.color == "red") {
+                return "#ff7675"
+            } else if(action.color == "green") {
+                return "#55efc4"
             } else {
-              this.job.percentCompleted = data.progress.completion
+                return "#dfe6e9"
             }
-            this.job.filename = data.job.file.name
-            this.job.filepath = data.job.file.path
-            this.job.timeRemaining = data.progress.printTimeLeft
-            const epochComplete = (moment().valueOf() + (this.job.timeRemaining * 1000))
-            this.job.eta = moment(epochComplete).calendar();
-            this.job.filamentUsage[0] = this.lengthToWeight(data.job.filament.tool0.length)
-            if(data.job.filament.tool1 != undefined) {
-              this.job.filamentUsage[1] = this.lengthToWeight(data.job.filament.tool1.length)
-            }
-          })
-        })
-        this.getLayerStatus().then((data) => {
-          this.job.currentLayer = data.layer.current
-          this.job.totalLayers = data.layer.total
-          if(data.fanSpeed == "-" || data.fanSpeed == "Off") {
-            this.printer.fan.speed = 0
-          } else {
-            this.printer.fan.speed = parseInt(data.fanSpeed.split("%")[0])
-          }
-        })
-      },
-      goodOrBad: function(action) {
-        if(action.color == "red") {
-          return "now-printing__dialog-action-bad"
-        } else if(action.color == "green") {
-          return "now-printing__dialog-action-good"
-        } else {
-          return "now-printing__dialog-action-neutral"
         }
-      },
-      goodOrBadIcon: function(action) {
-        if(action.color == "red") {
-          return "#ff7675"
-        } else if(action.color == "green") {
-          return "#55efc4"
-        } else {
-          return "#dfe6e9"
-        }
-      }
     },
     computed: {
-      pauseOrPlay: function() {
-        if(this.printer.state == "Pausing" || this.printer.state == "Paused") {
-          return "Resume Print"
-        } else {
-          return "Pause Print"
+        pauseOrPlay: function() {
+            if(this.printer.state == "Pausing" || this.printer.state == "Paused") {
+                return "Resume Print"
+            } else {
+                return "Pause Print"
+            }
+        },
+        spinning: function() {
+            if(this.printer.fan.speed > 0) {
+                return "spin"
+            } else {
+                return ""
+            }
         }
-      },
-      spinning: function() {
-        if(this.printer.fan.speed > 0) {
-          return "spin"
-        } else {
-          return ""
-        }
-      }
     },
     data: function() {
-      return {
-        screen: "printing",
-        overlay: "",
-        oldScreen: "",
-        currentDialog: {
-          title: "",
-          actions: []
-        },
-        currentHeader: 1,
-        job: {
-          percentCompleted: 0,
-          filename: "",
-          filepath: "",
-          eta: "",
-          filamentUsage: [],
-          timeRemaining: 0,
-          currentLayer: 0,
-          totalLayers: 0
-        },
-        printer: {
-          name: "",
-          isHeating: false,
-          isCooling: false,
-          state: "",
-          nozzle: {
-            target: 0,
-            actual: 0
-          },
-          bed: {
-            target: 0,
-            actual: 0
-          },
-          fan: {
-            speed: 0
-          }
+        return {
+            loop: 0,
+            screen: "printing",
+            overlay: "",
+            oldScreen: "",
+            currentDialog: {
+                title: "",
+                actions: []
+            },
+            currentHeader: 1,
+            job: {
+                percentCompleted: 0,
+                filename: "",
+                filepath: "",
+                eta: "",
+                filamentUsage: [],
+                timeRemaining: 0,
+                currentLayer: 0,
+                totalLayers: 0
+            },
+            printer: {
+                name: "",
+                isHeating: false,
+                isCooling: false,
+                state: "",
+                nozzle: {
+                    target: 0,
+                    actual: 0
+                },
+                bed: {
+                    target: 0,
+                    actual: 0
+                },
+                fan: {
+                    speed: 0
+                }
+            }
         }
-      };
     }
-  })
+})
 </script>

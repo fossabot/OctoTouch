@@ -3,7 +3,7 @@
 </style>
 
 <template>
-  <div fill-height fluid class="control__container">
+  <div fill-height fluid class="container">
     <v-row class="header">
       <v-col @click="goto('/')" class="header-item" align="start">
         <span style="float: left; margin-left: 2vw"><v-icon style="margin-top: -3px" color=#fff size=40px>mdi-arrow-left-circle-outline</v-icon></span>
@@ -98,8 +98,8 @@
 
     <div>
       <transition name="fade">
-        <div @click.self="overlay= ''" v-if="overlay == 'tempAdjust-hotend'" style="display: flex; content-align: center; z-index: 10; position: fixed; top: 0%; left: 0%; width: 100vw; height: 100vh; background-color: rgba(28,35,37,0.9);">
-          <div style="z-index: 12; margin: auto; width: 40vw; height: 70vh; border-radius: 20px; border: 4px solid #fff; padding: 10px; padding-left: 15px; padding-right: 15px; background-color: rgba(28,35,37,0.9);">
+        <div @click.self="overlay= ''" v-if="overlay == 'tempAdjust-hotend'" class="modal-container">
+          <div class="modal-wrapper">
             <v-row>
               <v-col v-ripple @click="nozzleOffset(1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+1</v-col>
               <v-col></v-col>
@@ -124,8 +124,8 @@
         </div> 
       </transition>
       <transition name="fade">
-        <div @click.self="overlay= ''" v-if="overlay == 'tempAdjust-heatedbed'" style="display: flex; content-align: center; z-index: 10; position: fixed; top: 0%; left: 0%; width: 100vw; height: 100vh; background-color: rgba(28,35,37,0.9);">
-          <div style="z-index: 12; margin: auto; width: 40vw; height: 70vh; border-radius: 20px; border: 4px solid #fff; padding: 10px; padding-left: 15px; padding-right: 15px; background-color: rgba(28,35,37,0.9);">
+        <div @click.self="overlay= ''" v-if="overlay == 'tempAdjust-heatedbed'" class="modal-container">
+          <div class="modal-wrapper">
             <v-row>
               <v-col v-ripple @click="bedOffset(1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+1</v-col>
               <v-col></v-col>
@@ -154,91 +154,91 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue'
-  import {OctoprintAPI} from '../../octoprint-api/api'
-  import {config} from "../../config"
-  declare var moment
+import Vue from "vue"
+import {OctoprintAPI} from "../../octoprint-api/api"
+import {config} from "../../config"
+declare var moment
 
-  export default Vue.extend({
-    name: 'Control',
+export default Vue.extend({
+    name: "Control",
     mixins: [OctoprintAPI],
     mounted: function() {
-      this.update()
-      this.printer.name = config.printerName
-      this.updateInterval = setInterval(this.update, 2500);
+        this.update()
+        this.printer.name = config.printerName
+        this.updateInterval = setInterval(this.update, 2500)
     },
     methods: {
-      formatTimeRemaining: function(remainingSeconds) {
-        return moment("2015-01-01").startOf('day')
-          .seconds(remainingSeconds)
-          .format('H:mm');
-      },
-      update: function() {
-        this.getJobStatus().then((data) => {
-          this.printer.state = data.state
-          if(data.state == "Printing" || data.state == "Starting") {
-            this.$router.push("/now-printing");
-          }
-        })
-        this.getLayerStatus().then((data) => {
-          if(data.fanSpeed == "-" || data.fanSpeed == "Off") {
-            this.printer.fan.speed = 0
-          } else {
-            this.printer.fan.speed = parseInt(data.fanSpeed.split("%")[0])
-          }
-        })
-        this.getPrinterStatus().then((data) => {
-          this.printer.nozzle.target = data.temperature.tool0.target
-          this.printer.nozzle.actual = data.temperature.tool0.actual
-          this.printer.bed.target = data.temperature.bed.target
-          this.printer.bed.actual = data.temperature.bed.actual
-        })
-      },
-      nozzleOffset: function(temp) {
-        if(this.printer.nozzle.target + temp >= 0 && this.printer.nozzle.target + temp <= 275) {
-          this.printer.nozzle.target = this.printer.nozzle.target + temp
+        formatTimeRemaining: function(remainingSeconds) {
+            return moment("2015-01-01").startOf("day")
+                .seconds(remainingSeconds)
+                .format("H:mm")
+        },
+        update: function() {
+            this.getJobStatus().then((data) => {
+                this.printer.state = data.state
+                if(data.state == "Printing" || data.state == "Starting") {
+                    this.$router.push("/now-printing")
+                }
+            })
+            this.getLayerStatus().then((data) => {
+                if(data.fanSpeed == "-" || data.fanSpeed == "Off") {
+                    this.printer.fan.speed = 0
+                } else {
+                    this.printer.fan.speed = parseInt(data.fanSpeed.split("%")[0])
+                }
+            })
+            this.getPrinterStatus().then((data) => {
+                this.printer.nozzle.target = data.temperature.tool0.target
+                this.printer.nozzle.actual = data.temperature.tool0.actual
+                this.printer.bed.target = data.temperature.bed.target
+                this.printer.bed.actual = data.temperature.bed.actual
+            })
+        },
+        nozzleOffset: function(temp) {
+            if(this.printer.nozzle.target + temp >= 0 && this.printer.nozzle.target + temp <= 275) {
+                this.printer.nozzle.target = this.printer.nozzle.target + temp
+            }
+            this.setNozzleTemp(this.printer.nozzle.target).then(() => {
+                this.update()
+            })
+        },
+        bedOffset: function(temp) {
+            if(this.printer.bed.target + temp >= 0 && this.printer.bed.target + temp <= 275) {
+                this.printer.bed.target = this.printer.bed.target + temp
+            }
+            this.setBedTemp(this.printer.bed.target).then(() => {
+                this.update()
+            })
         }
-        this.setNozzleTemp(this.printer.nozzle.target).then(() => {
-          this.update()
-        });
-      },
-      bedOffset: function(temp) {
-        if(this.printer.bed.target + temp >= 0 && this.printer.bed.target + temp <= 275) {
-          this.printer.bed.target = this.printer.bed.target + temp
-        }
-        this.setBedTemp(this.printer.bed.target).then(() => {
-          this.update()
-        });
-      }
     },
     computed: {
-      spinning: function() {
-        if(this.printer.fan.speed > 0) {
-          return "spin"
-        } else {
-          return ""
+        spinning: function() {
+            if(this.printer.fan.speed > 0) {
+                return "spin"
+            } else {
+                return ""
+            }
         }
-      }
     },
     data: function() {
-      return {
-        overlay: "",
-        printer: {
-          name: "",
-          state: "",
-          nozzle: {
-            target: 0,
-            actual: 0
-          },
-          bed: {
-            target: 0,
-            actual: 0
-          },
-          fan: {
-            speed: 0
-          }
+        return {
+            overlay: "",
+            printer: {
+                name: "",
+                state: "",
+                nozzle: {
+                    target: 0,
+                    actual: 0
+                },
+                bed: {
+                    target: 0,
+                    actual: 0
+                },
+                fan: {
+                    speed: 0
+                }
+            }
         }
-      };
     }
-  })
+})
 </script>

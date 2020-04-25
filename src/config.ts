@@ -4,7 +4,8 @@ const config = {
     printerName: "ATOM 2.5 EX",
     filamentThickness: 1.75,
     filamentDensity: 1.24,
-    showFolders: false
+    showFolders: false,
+    cura: true
 }
 
 export {config}
