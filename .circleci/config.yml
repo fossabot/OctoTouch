@@ -60,6 +60,5 @@ workflows:
           requires:
             - electron-build
           filters:
-            branches:
-              only:
-                - master
+            tags:
+              only: /.*/
