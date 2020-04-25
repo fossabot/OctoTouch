@@ -53,11 +53,17 @@ workflows:
           requires:
             - lint
           filters:
+            branches:
+              ignore: /.*/
             tags:
-              only: /.*/
+              only: /^v[0-9]+(\.[0-9]+)*$/
+...
       - publish-github-release:
           requires:
             - electron-build
           filters:
+            branches:
+              ignore: /.*/
             tags:
-              only: /.*/
+              only: /^v[0-9]+(\.[0-9]+)*$/
+...
