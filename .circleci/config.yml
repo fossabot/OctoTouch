@@ -30,16 +30,11 @@ jobs:
       - attach_workspace:
           at: ./wks
       - run:
-          name: "Get package version"
-          command: |
-            PACKAGE_VERSION=$(cat ./wks/dist_electron/package.json \
-            grep version \
-            head -1 \
-            awk -F: '{ print $2 }' \
-            sed 's/[",]//g')
+          name: "Install dependencies"
+          command: sudo apt-get update && sudo apt-get install -yqq jq
       - run:
           name: "Version is..."
-          command: echo $PACKAGE_VERSION
+          command: $(cat ./wks/electron_dist/package.json | jq -r .version)
       - run:
           name: "What's in the workspace??"
           command: |
@@ -55,5 +50,4 @@ workflows:
             - lint
       - publish-github-release:
           requires:
-            - lint
             - electron-build
