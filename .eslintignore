@@ -1,5 +1,5 @@
 dist_electron/**/*
 dist/**/*
-src/octoprint-api/api.ts
+./src/octoprint-api/api.ts
 ./**/*.scss
 README.md
