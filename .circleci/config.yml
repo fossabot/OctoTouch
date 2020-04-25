@@ -19,12 +19,13 @@ jobs:
       - node/with-cache:
           steps:
             - run: npm install
+            - run: npm run lint
             - run: npm run electron:build
             - run: cp package.json ./dist_electron
       - persist_to_workspace:
           root: /home/circleci/project
           paths: dist_electron
-  publish-github-release:
+  publish:
     docker:
       - image: circleci/golang:latest
     steps:
