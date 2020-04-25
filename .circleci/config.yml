@@ -2,7 +2,16 @@ version: 2.1
 orbs:
   node: circleci/node@1.1.6
 jobs:
-  electron-pack:
+  lint:
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - node/with-cache:
+          steps:
+            - run: npm install
+            - run: npm run lint
+  electron-build:
     executor:
       name: node/default
     steps:
@@ -21,15 +30,30 @@ jobs:
       - attach_workspace:
           at: ./wks
       - run:
+          name: "Get package version"
+          command: |
+            PACKAGE_VERSION=$(cat ./wks/dist_electron/package.json \
+            grep version \
+            head -1 \
+            awk -F: '{ print $2 }' \
+            sed 's/[",]//g')
+      - run:
+          name: "Version is..."
+          command: echo $PACKAGE_VERSION
+      - run:
           name: "What's in the workspace??"
           command: |
             ls ./wks
     
 workflows:
   version: 2
-  build-and-deploy:
+  lint-and-build:
     jobs:
-      - electron-pack
+      - lint
+      - electron-pack:
+          requires:
+            - lint
       - publish-github-release:
           requires:
+            - lint
             - electron-pack
