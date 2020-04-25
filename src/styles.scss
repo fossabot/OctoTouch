@@ -124,6 +124,15 @@ opacity: 0;
             padding-right: 5vw;
         }
 
+        &-padded-item {
+            @media(min-height: 400px) {
+                margin-top: 1.2vh;
+            }
+            @media(max-height: 400px) {
+                margin-top: .6vh;
+            }
+        }
+
         &-item {
             z-index: 2;
             font-size: 4.16vh;
@@ -131,6 +140,9 @@ opacity: 0;
             text-align: center;
             color: #fff;
             height: 100%;
+            @media(max-height: 400px) {
+                margin-top: -1.2vh;
+            }
         }
     }
 

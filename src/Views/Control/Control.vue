@@ -11,7 +11,7 @@
             <v-col class="header-item" align="center">
                 <v-icon style="margin-top: -0.625vh;" size="8.33vh" color="#fff">mdi-google-controller</v-icon>
             </v-col>
-            <v-col class="header-item" align="end">
+            <v-col class="header-item header-padded-item" align="end">
                 <span style="float: right; margin-right: 5vw;">{{ printer.name }}</span>
             </v-col>
         </v-row>
@@ -129,7 +129,7 @@ export default Vue.extend({
             this.getJobStatus().then((data) => {
                 this.printer.state = data.state
                 if (data.state == "Printing" || data.state == "Starting") {
-                    //this.$router.push("/now-printing")
+                    this.$router.push("/now-printing")
                 }
             })
             this.getLayerStatus().then((data) => {

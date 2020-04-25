@@ -6,12 +6,12 @@
     <div fill-height fluid class="container">
         <v-row class="header">
             <v-col @click="goto('/')" class="header-item">
-                <span><v-icon color="#fff" size="35px">mdi-arrow-left-circle-outline</v-icon></span>
+                <span><v-icon size="8.33vh" color="#fff">mdi-arrow-left-circle-outline</v-icon></span>
             </v-col>
             <v-col class="header-item">
-                <v-icon size="30px" color="#fff">mdi-folder-multiple</v-icon>
+                <v-icon size="8.33vh" color="#fff">mdi-folder-multiple</v-icon>
             </v-col>
-            <v-col class="header-item">
+            <v-col class="header-item header-padded-item">
                 <span>{{ printer.name }}</span>
             </v-col>
         </v-row>
