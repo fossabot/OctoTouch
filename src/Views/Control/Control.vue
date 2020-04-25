@@ -117,7 +117,7 @@ export default Vue.extend({
     mounted: function() {
         this.update()
         this.printer.name = config.printerName
-        this.updateInterval = setInterval(this.update, 2500)
+        this.updateInterval = setInterval(this.update, 2000)
     },
     methods: {
         formatTimeRemaining: function(remainingSeconds) {
