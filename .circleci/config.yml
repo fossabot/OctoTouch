@@ -35,7 +35,7 @@ jobs:
           command: sudo apt-get update && sudo apt-get install -yqq jq
       - run:
           name: "Retrieve package version"
-          command: VERSION=$(cat ./wks/dist_electron/package.json | jq -r .version)
+          command: export VERSION=$(cat ./wks/dist_electron/package.json | jq -r .version)
       - run:
           name: "Install deployment suite"
           command: go get github.com/tcnksm/ghr
