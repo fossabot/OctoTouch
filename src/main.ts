@@ -1,18 +1,20 @@
 import Vue from "vue"
 import App from "./App.vue"
-import router from "./router"
-import vuetify from "./plugins/vuetify"
+import AppRouter from "./Router"
+import vuetify from "./Plugins/vuetify"
 
 Vue.use(vuetify)
 
 Vue.config.productionTip = false
 declare global {
-  interface Window { moment: any; }
+    interface Window {
+        moment: any
+    }
 }
-window.moment =  require("moment")
 
+const router = AppRouter
 new Vue({
     router,
     vuetify,
-    render: h => h(App)
+    render: (h) => h(App),
 }).$mount("#app")
