@@ -13,19 +13,19 @@
     &__detail {
         &-item {
             z-index: 2;
-            font-size: 20px;
+            font-size: 4.16vh;
             font-weight: 300;
             text-align: center;
             color: #fff;
-            height: 80px;
+            height: 16.66vh;
         }
 
         &-text {
-            font-size: 20px;
+            font-size: 4.16vh;
             float: left;
         }
         &-text-small {
-            font-size: 15px;
+            font-size: 3.125vh;
             float: left;
         }
     }
@@ -38,7 +38,7 @@
     &__layer {
         &-current {
             z-index: 2;
-            font-size: 20px;
+            font-size: 4.16vh;
             font-weight: 500 !important;
             text-align: center;
             color: #fff;
@@ -63,11 +63,11 @@
         z-index: 2;
         margin-left: 5vw;
         margin-right: 5vw;
-        margin-top: 15px;
+        margin-top: 3.125vh;
 
         &-title {
             color: white;
-            font-size: 40px;
+            font-size: 10vh;
             font-weight: 400;
             display: inline;
             max-width: 80vw !important;
@@ -77,8 +77,8 @@
         }
         &-subtitle {
             color: white;
-            line-height: 10px;
-            font-size: 20px;
+            line-height: 2.08vh;
+            font-size: 3vw;
             font-weight: 300;
             display: inline;
             max-width: 80vw !important;
@@ -89,7 +89,7 @@
 
         &-percent {
             color: white;
-            font-size: 40px;
+            font-size: 6vw;
             font-weight: 400;
             display: inline;
             max-width: 80vw !important;
