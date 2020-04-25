@@ -9,7 +9,7 @@
         {{printer.name}}
       </v-col>
       <v-col class="header-item" align="center">
-        {{Math.round(printer.nozzle.actual)}}°C <v-icon style="margin-right: 12px;" color=#fff size=20px>mdi-printer-3d-nozzle</v-icon>{{Math.round(printer.bed.actual)}}°C <v-icon color=#fff size=20px>mdi-radiator</v-icon>
+        {{Math.round(printer.nozzle.actual)}}°C <v-icon style="margin-right: 12px; margin-top: -4px;" color=#fff size=20px>mdi-printer-3d-nozzle</v-icon>{{Math.round(printer.bed.actual)}}°C <v-icon color=#fff style="margin-top: -4px;" size=20px>mdi-radiator</v-icon>
       </v-col>
       <v-col class="header-item" align="end">
         {{printer.state}}
@@ -58,7 +58,7 @@
         this.getPrinterStatus().then((data) => {
           this.printer.state = data.state.text
           if(data.state.text == "Printing") {
-            //this.goto("/now-printing");
+            this.goto("/now-printing");
           }
           this.printer.nozzle.actual = data.temperature.tool0.actual
           this.printer.bed.actual = data.temperature.bed.actual
