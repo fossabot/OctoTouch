@@ -50,7 +50,7 @@ workflows:
   lint-and-build:
     jobs:
       - lint
-      - electron-pack:
+      - electron-build:
           requires:
             - lint
       - publish-github-release:
