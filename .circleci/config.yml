@@ -34,8 +34,14 @@ jobs:
           name: "Install dependencies"
           command: sudo apt-get update && sudo apt-get install -yqq jq
       - run:
-          name: "Version is..."
-          command: $(cat ./wks/dist_electron/package.json | jq -r .version)
+          name: "Retrieve package version"
+          command: export VERSION=$(cat ./wks/dist_electron/package.json | jq -r .version)
+      - run:
+          name: "Install deployment suite"
+          command: go get github.com/tcnksm/ghr
+      - run: 
+          name: "Deploy to GitHub"
+          command: ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./wks/dist_electron/*.deb
       - run:
           name: "What's in the workspace??"
           command: |
