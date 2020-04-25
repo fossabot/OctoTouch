@@ -11,7 +11,7 @@ declare global {
         moment: any
     }
 }
-window.moment = require("moment")
+
 const router = AppRouter
 new Vue({
     router,

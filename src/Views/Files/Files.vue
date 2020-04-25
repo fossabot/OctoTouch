@@ -96,7 +96,7 @@
 import Vue from "vue"
 import { OctoPrint } from "@/Mixins/OctoPrint"
 import { Config as config } from "@/Mixins/Config"
-declare var moment
+const moment = require("moment")
 
 export default Vue.extend({
     name: "Files",
@@ -121,7 +121,7 @@ export default Vue.extend({
             this.viewingFile = true
         },
         formatTimeRemaining: function (remainingSeconds) {
-            return moment("2015-01-01").startOf("day").seconds(remainingSeconds).format("H:mm")
+            return moment("2015-01-01").startOf("day").seconds(remainingSeconds).format("HH:mm")
         },
         update: function () {
             this.getJobStatus().then((data) => {

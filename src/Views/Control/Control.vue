@@ -111,7 +111,7 @@ import Vue from "vue"
 import { OctoPrint } from "@/Mixins/OctoPrint"
 import { Config as config } from "@/Mixins/Config"
 import QuickAdjust from "@/Components/QuickAdjust/QuickAdjust.vue"
-declare var moment
+const moment = require("moment")
 
 export default Vue.extend({
     name: "Control",

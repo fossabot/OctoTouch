@@ -187,71 +187,13 @@
         <!-- these div tags are useless, only point is code folding :) -->
         <div>
             <transition name="fade">
-                <div
-                    @click.self="overlay = ''"
-                    v-if="overlay == 'print-picture'"
-                    style="display: flex; content-align: center; z-index: 10; position: fixed; top: 0%; left: 0%; width: 100vw; height: 100vh; background-color: rgba(28, 35, 37, 0.9);"
-                >
-                    <div
-                        style="
-                            text-align: center;
-                            z-index: 12;
-                            margin: auto;
-                            width: 40vw;
-                            height: 70vh;
-                            border-radius: 20px;
-                            border: 4px solid #fff;
-                            padding: 10px;
-                            padding-left: 15px;
-                            padding-right: 15px;
-                            background-color: rgba(28, 35, 37, 0.9);
-                        "
-                    >
+                <div @click.self="overlay = ''" v-if="overlay == 'print-picture'" class="modal-container">
+                    <div class="modal-wrapper">
                         <img style="width: 35vw;" :src="ufpPreviewURL(job.filepath)" />
                     </div>
                 </div>
-                <div
-                    @click.self="overlay = ''"
-                    v-if="overlay == 'tempAdjust-hotend'"
-                    style="display: flex; content-align: center; z-index: 10; position: fixed; top: 0%; left: 0%; width: 100vw; height: 100vh; background-color: rgba(28, 35, 37, 0.9);"
-                >
-                    <div
-                        style="
-                            z-index: 12;
-                            margin: auto;
-                            width: 40vw;
-                            height: 70vh;
-                            border-radius: 20px;
-                            border: 4px solid #fff;
-                            padding: 10px;
-                            padding-left: 15px;
-                            padding-right: 15px;
-                            background-color: rgba(28, 35, 37, 0.9);
-                        "
-                    >
-                        <v-row>
-                            <v-col v-ripple @click="nozzleOffset(1)" justify="center" align="center" style="color: #fff; font-size: 6vh; font-weight: 300;">+1</v-col>
-                            <v-col></v-col>
-                            <v-col v-ripple @click="nozzleOffset(10)" justify="center" align="center" style="color: #fff; font-size: 6vh; font-weight: 300;">+10</v-col>
-                        </v-row>
-                        <v-row style="margin-top: 0px; margin-bottom: 0px;">
-                            <v-col></v-col>
-                            <v-col justify="center" align="center" style="color: #fff; font-size: 12vh; font-weight: 300;">{{ printer.nozzle.target }}</v-col>
-                            <v-col></v-col>
-                        </v-row>
-                        <v-row style="border-bottom: 4px solid #fff;">
-                            <v-col v-ripple @click="nozzleOffset(-1)" justify="center" align="center" style="color: #fff; font-size: 6vh; font-weight: 300;">-1</v-col>
-                            <v-col></v-col>
-                            <v-col v-ripple @click="nozzleOffset(-10)" justify="center" align="center" style="color: #fff; font-size: 6vh; font-weight: 300;">-10</v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col></v-col>
-                            <v-col v-ripple @click.self="overlay = ''" justify="center" align="center" style="color: #fff; font-size: 6vh; font-weight: 300;">back</v-col>
-                            <v-col></v-col>
-                        </v-row>
-                    </div>
-                </div>
-
+                <quick-adjust v-if="overlay == 'tempAdjust-hotend'" :value="printer.nozzle.target" v-on:close="overlay = ''" v-on:setValue="setNozzleTemp"></quick-adjust>
+                <quick-adjust v-if="overlay == 'tempAdjust-heatedbed'" :value="printer.bed.target" v-on:close="overlay = ''" v-on:setValue="setBedTemp"></quick-adjust>
                 <div class="now-printing__details now-printing__dialog" v-if="screen == 'dialog'">
                     <h1 class="now-printing__dialog-title">{{ currentDialog.title }}</h1>
                     <v-row class="now-printing__dialog-actions">
@@ -263,49 +205,6 @@
                     </v-row>
                 </div>
             </transition>
-            <transition name="fade">
-                <div
-                    @click.self="overlay = ''"
-                    v-if="overlay == 'tempAdjust-heatedbed'"
-                    style="display: flex; content-align: center; z-index: 10; position: fixed; top: 0%; left: 0%; width: 100vw; height: 100vh; background-color: rgba(28, 35, 37, 0.9);"
-                >
-                    <div
-                        style="
-                            z-index: 12;
-                            margin: auto;
-                            width: 40vw;
-                            height: 70vh;
-                            border-radius: 20px;
-                            border: 4px solid #fff;
-                            padding: 10px;
-                            padding-left: 15px;
-                            padding-right: 15px;
-                            background-color: rgba(28, 35, 37, 0.9);
-                        "
-                    >
-                        <v-row>
-                            <v-col v-ripple @click="bedOffset(1)" justify="center" align="center" style="color: #fff; font-size: 6vh; font-weight: 300;">+1</v-col>
-                            <v-col></v-col>
-                            <v-col v-ripple @click="bedOffset(10)" justify="center" align="center" style="color: #fff; font-size: 6vh; font-weight: 300;">+10</v-col>
-                        </v-row>
-                        <v-row style="margin-top: 0px; margin-bottom: 0px;">
-                            <v-col></v-col>
-                            <v-col justify="center" align="center" style="color: #fff; font-size: 12vh; font-weight: 300;">{{ printer.bed.target }}</v-col>
-                            <v-col></v-col>
-                        </v-row>
-                        <v-row style="border-bottom: 4px solid #fff;">
-                            <v-col v-ripple @click="bedOffset(-1)" justify="center" align="center" style="color: #fff; font-size: 6vh; font-weight: 300;">-1</v-col>
-                            <v-col></v-col>
-                            <v-col v-ripple @click="bedOffset(-10)" justify="center" align="center" style="color: #fff; font-size: 6vh; font-weight: 300;">-10</v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col></v-col>
-                            <v-col v-ripple @click.self="overlay = ''" justify="center" align="center" style="color: #fff; font-size: 6vh; font-weight: 300;">back</v-col>
-                            <v-col></v-col>
-                        </v-row>
-                    </div>
-                </div>
-            </transition>
         </div>
     </div>
 </template>
@@ -314,7 +213,8 @@
 import Vue from "vue"
 import { OctoPrint } from "@/Mixins/OctoPrint"
 import { Config as config } from "@/Mixins/Config"
-declare var moment
+import QuickAdjust from "@/Components/QuickAdjust/QuickAdjust.vue"
+const moment = require("moment")
 
 export default Vue.extend({
     name: "NowPrinting",
@@ -391,13 +291,7 @@ export default Vue.extend({
                     this.printer.bed.actual = data.temperature.bed.actual
 
                     if (Math.abs(this.printer.nozzle.actual - this.printer.nozzle.target) > 10 || Math.abs(this.printer.bed.actual - this.printer.bed.target) > 3) {
-                        if (this.printer.nozzle.actual > this.printer.nozzle.target || this.printer.bed.actual > this.printer.bed.target) {
-                            this.printer.isCooling = true
-                            this.printer.isHeating = false
-                        } else {
-                            this.printer.isHeating = true
-                            this.printer.isCooling = false
-                        }
+                        this.printer.isHeating = true
                     } else {
                         this.printer.isHeating = false
                         this.printer.isCooling = false
@@ -510,6 +404,9 @@ export default Vue.extend({
                 },
             },
         }
+    },
+    components: {
+        "quick-adjust": QuickAdjust,
     },
 })
 </script>
