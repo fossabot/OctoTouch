@@ -1,7 +1,7 @@
 import Vue from "vue"
 import App from "./App.vue"
-import router from "./router"
-import vuetify from "./plugins/vuetify"
+import AppRouter from "./Router"
+import vuetify from "./Plugins/vuetify"
 
 Vue.use(vuetify)
 
@@ -10,7 +10,7 @@ declare global {
   interface Window { moment: any; }
 }
 window.moment =  require("moment")
-
+const router = AppRouter
 new Vue({
     router,
     vuetify,

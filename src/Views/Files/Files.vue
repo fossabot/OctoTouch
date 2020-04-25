@@ -82,13 +82,13 @@
 
 <script lang="ts">
 import Vue from "vue"
-import {OctoprintAPI} from "../../octoprint-api/api"
-import {config} from "../../config"
+import {OctoPrint} from "../../Mixins/OctoPrint"
+import {Config as config} from "../../Mixins/Config"
 declare var moment
 
 export default Vue.extend({
     name: "Files",
-    mixins: [OctoprintAPI],
+    mixins: [OctoPrint],
     mounted: function() {
         this.update()
         this.printer.name = config.printerName

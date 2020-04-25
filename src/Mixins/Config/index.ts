@@ -1,4 +1,4 @@
-const config = {
+const Config = {
     baseURL: "http://192.168.0.157/api/",
     key: "8DEC1B0562A84821A670F7A71ECE00C0",
     printerName: "ATOM 2.5 EX",
@@ -8,4 +8,4 @@ const config = {
     cura: true
 }
 
-export {config}
+export {Config}

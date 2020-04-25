@@ -1,11 +1,11 @@
 import Vue from "vue"
 // eslint-disable-next-line no-unused-vars
 import VueRouter, { RouteConfig } from "vue-router"
-import MainScreen from "../components/MainScreen/MainScreen.vue"
-import NowPrinting from "../components/NowPrinting/NowPrinting.vue"
-import Control from "../components/Control/Control.vue"
-import Files from "../components/Files/Files.vue"
-import Utilities from "../components/Utilities/Utilities.vue"
+import MainScreen from "../Views/MainScreen/MainScreen.vue"
+import NowPrinting from "../Views/NowPrinting/NowPrinting.vue"
+import Control from "../Views/Control/Control.vue"
+import Files from "../Views/Files/Files.vue"
+import Utilities from "../Views/Utilities/Utilities.vue"
 
 Vue.use(VueRouter)
 
@@ -37,10 +37,10 @@ const routes: Array<RouteConfig> = [
     }
 ]
 
-const router = new VueRouter({
+const AppRouter = new VueRouter({
     mode: "history",
     base: process.env.BASE_URL,
     routes
 })
 
-export default router
+export default AppRouter

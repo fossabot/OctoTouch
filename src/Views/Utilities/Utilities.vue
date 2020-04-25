@@ -1,15 +1,15 @@
 <style lang="sass">
-  @import "MainScreen.scss"
+  @import "Utilities.scss"
 </style>
 
 <template>
-  <div @click="resetTimeout()" fill-height fluid class="container">
+  <div @click="resetTimeout()" fill-height fluid class="main-menu__container">
     <v-row class="header" align="center" justify="center">
       <v-col class="header-item" align="start">
         {{printer.name}}
       </v-col>
       <v-col class="header-item" align="center">
-        {{Math.round(printer.nozzle.actual)}}°C <v-icon style="margin-right: 12px; margin-top: -4px;" color=#fff size=20px>mdi-printer-3d-nozzle</v-icon>{{Math.round(printer.bed.actual)}}°C <v-icon color=#fff style="margin-top: -4px;" size=20px>mdi-radiator</v-icon>
+        {{Math.round(printer.nozzle.actual)}}°C <v-icon style="margin-right: 12px;" color=#fff size=20px>mdi-printer-3d-nozzle</v-icon>{{Math.round(printer.bed.actual)}}°C <v-icon color=#fff size=20px>mdi-radiator</v-icon>
       </v-col>
       <v-col class="header-item" align="end">
         {{printer.state}}
@@ -40,11 +40,12 @@
 
 <script lang="ts">
 import Vue from "vue"
-import {OctoprintAPI} from "../../octoprint-api/api"
-import {config} from "../../config"
+import {OctoPrint} from "../../Mixins/OctoPrint"
+import {Config as config} from "../../Mixins/Config"
+
 export default Vue.extend({
-    name: "MainScreen",
-    mixins: [OctoprintAPI],
+    name: "Utilities",
+    mixins: [OctoPrint],
     mounted: function() {
         this.printer.name = config.printerName
         this.update()
