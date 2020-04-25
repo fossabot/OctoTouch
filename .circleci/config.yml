@@ -52,16 +52,14 @@ workflows:
       - electron-build:
           requires:
             - lint
-#          filters:
-#            branches:
-#              ignore: /.*/
-#            tags:
-#              only: /^\d+\.\d+\.\d+$/
+          filters:
+            branches:
+              only:
+                - master
       - publish-github-release:
           requires:
             - electron-build
-#          filters:
-#            branches:
-#              ignore: /.*/
-#            tags:
-#              only: /^\d+\.\d+\.\d+$/
+          filters:
+            branches:
+              only:
+                - master
