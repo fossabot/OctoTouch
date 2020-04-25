@@ -20,7 +20,7 @@ jobs:
           steps:
             - run: npm install
             - run: npm run electron:build
-            - run: cp project.json ./dist_electron
+            - run: cp package.json ./dist_electron
       - persist_to_workspace:
           root: /home/circleci/project
           paths: dist_electron
