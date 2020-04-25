@@ -10,9 +10,9 @@
                 <v-col></v-col>
                 <v-col v-ripple @click="inc(10)" justify="center" align="center" class="quickadjust__action">+10</v-col>
             </v-row>
-            <v-row style="margin-top: 0px; margin-bottom: 0px;">
+            <v-row>
                 <v-col></v-col>
-                <v-col justify="center" align="center" style="color: #fff; font-size: 12vh; font-weight: 300;">{{ setPoint }}</v-col>
+                <v-col justify="center" align="center" style="color: #fff; font-size: 12vh; line-height: 12vh; font-weight: 300;">{{ setPoint }}</v-col>
                 <v-col></v-col>
             </v-row>
             <v-row style="border-bottom: 4px solid #fff;">

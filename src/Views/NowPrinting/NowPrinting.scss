@@ -51,7 +51,7 @@
     &__layer {
         &-current {
             z-index: 2;
-            font-size: 20px;
+            font-size: 4.16vh;
             font-weight: 500 !important;
             text-align: center;
             color: #fff;
@@ -83,16 +83,16 @@
         z-index: 2;
         margin-left: 5vw;
         margin-right: 5vw;
-        margin-top: 15px;
+        margin-top: 3.125vh;
 
         &-title {
             color: white;
-            font-size: 40px;
+            font-size: 8.33vh;
             font-weight: 400;
             display: block;
-            margin-top: 15px;
-            height: 40px;
-            padding-top: 5px;
+            margin-top: 3.125vh;
+            height: 8.33vh;
+            padding-top: 1.04vh;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -101,15 +101,15 @@
         }
         &-subtitle {
             color: white;
-            font-size: 20px;
+            font-size: 4.16vh;
             font-weight: 300;
             margin-top: 0;
-            margin-right: -5px;
+            margin-right: -1.04vh;
         }
 
         &-percent {
             color: white;
-            font-size: 40px;
+            font-size: 8.33vh;
             font-weight: 400;
             display: inline;
             max-width: 80vw !important;
@@ -120,8 +120,8 @@
 
         &-remaining {
             color: white;
-            line-height: 25px;
-            font-size: 30px;
+            line-height: 5.2vh;
+            font-size: 6.25vh;
             font-weight: 400;
             display: inline;
             max-width: 80vw !important;
@@ -136,7 +136,7 @@
 
         &-item {
             z-index: 2;
-            font-size: 20px;
+            font-size: 4.16vh;
             font-weight: 300;
             text-align: center;
             color: #fff;
@@ -144,12 +144,12 @@
         }
 
         &-text {
-            font-size: 30px;
+            font-size: 6.25vh;
             float: left;
         }
         &-text-small {
-            font-size: 20px;
-            margin-top: -5px;
+            font-size: 4.16vh;
+            margin-top: -1.04vh;
             float: left;
         }
     }
@@ -164,8 +164,8 @@
         }
         &-actions {
             font-weight: 400;
-            font-size: 20px;
-            margin-top: 20px;
+            font-size: 4.16vh;
+            margin-top: 4.16vh;
         }
         &-action-bad {
             &__icon {

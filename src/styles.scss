@@ -75,20 +75,20 @@ opacity: 0;
         width: 40vw;
         height: 70vh;
         border-radius: 20px;
-        padding: 10px;
-        padding-left: 15px;
-        padding-right: 15px;
+        padding: 1.25vw;
+        padding-left: 1.875vw;
+        padding-right: 1.875vw;
         background-color: rgba(28,35,37,0.9);
     }
 
     &-title {
         color: #fff;
-        font-size: 20px;
+        font-size: 4.16vh;
     }
 
     &-close {
         float: right;
-        margin-right: -2px;
+        margin-right: -0.25vw;
     }
 }
 
@@ -104,7 +104,7 @@ opacity: 0;
 
         &-item:first-of-type {
             z-index: 2;
-            font-size: 20px;
+            font-size: 4.16vh;
             font-weight: 500 !important;
             text-align: left;
             color: #fff;
@@ -115,7 +115,7 @@ opacity: 0;
 
         &-item:last-of-type {
             z-index: 2;
-            font-size: 20px;
+            font-size: 4.16vh;
             font-weight: 500 !important;
             text-align: right;
             color: #fff;
@@ -126,7 +126,7 @@ opacity: 0;
 
         &-item {
             z-index: 2;
-            font-size: 20px;
+            font-size: 4.16vh;
             font-weight: 300;
             text-align: center;
             color: #fff;

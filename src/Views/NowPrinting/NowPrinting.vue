@@ -9,14 +9,14 @@
                 {{ printer.name }}
             </v-col>
             <v-col class="header-item" align="center">
-                <v-icon size="30px" color="#fff">mdi-printer-3d</v-icon>
+                <v-icon size="6.25vh" color="#fff">mdi-printer-3d</v-icon>
             </v-col>
             <v-col class="header-item" align="end">
-                <transition name="fade" mode="out-in">
-                    <span style="font-weight: 300;" v-if="currentHeader == 1"
+                <transition name="slide-x-transition" mode="out-in">
+                    <span key="1" style="font-weight: 300;" v-if="currentHeader == 1"
                         >Layer <span class="now-printing__layer-current">{{ job.currentLayer }}</span> of {{ job.totalLayers }}</span
                     >
-                    <p style="font-weight: 300;" v-if="currentHeader == 2">{{ job.eta }}</p>
+                    <span key="2" style="font-weight: 300;" v-if="currentHeader == 2">{{ job.eta }}</span>
                 </transition>
             </v-col>
         </v-row>
@@ -28,21 +28,21 @@
             :style="'width: ' + (job.percentCompleted + 1) + 'vw;'"
         ></div>
         <v-row class="now-printing__details">
-            <v-col v-if="printer.isHeating == false && printer.isCooling == false" class="now-printing__progress-below" align="start" :sm="2">
+            <v-col v-if="printer.isHeating == false && printer.isCooling == false" class="now-printing__progress-below" align="start" cols="2">
                 <span class="now-printing__details-percent">{{ Math.round(job.percentCompleted) }}%</span><br />
-                <span class="now-printing__details-remaining"><v-icon style="margin-top: -0.7vh;" size="30px" color="white">mdi-clock</v-icon> {{ formatTimeRemaining(job.timeRemaining) }}</span
+                <span class="now-printing__details-remaining"><v-icon style="margin-top: -0.7vh;" size="6.25vh" color="white">mdi-clock</v-icon> {{ formatTimeRemaining(job.timeRemaining) }}</span
                 ><br />
             </v-col>
-            <v-col v-if="printer.isHeating == true || printer.isCooling == true" class="now-printing__progress-below" align="start" :sm="2">
+            <v-col v-if="printer.isHeating == true || printer.isCooling == true" class="now-printing__progress-below" align="start" cols="2">
                 <span v-if="printer.isHeating == true" class="now-printing__details-percent">Heating</span>
                 <span v-if="printer.isCooling == true" class="now-printing__details-percent">Cooling</span><br />
-                <span class="now-printing__details-remaining" style="font-size: 20px;">Please wait</span><br />
+                <span class="now-printing__details-remaining" style="font-size: 4.16vh;">Please wait</span><br />
             </v-col>
             <v-col
                 @click="overlay = 'print-picture'"
                 class="now-printing__progress-below now-printing__progress-details"
-                style="color: white; font-size: 40px; line-height: 20px;"
-                :sm="10"
+                style="color: white; font-size: 8.33vh; line-height: 4.16vh;"
+                cols="10"
                 v-ripple
                 align="end"
             >
@@ -50,80 +50,78 @@
                     {{ formatFileName(job.filename) }}
                 </h1>
                 <h3 class="now-printing__details-subtitle">
-                    {{ job.filamentUsage[0] }}g <v-icon size="20px" color="white">mdi-printer-3d-nozzle</v-icon
-                    ><v-icon v-if="job.filamentUsage.length > 1" size="20px" color="white">mdi-numeric-0-box</v-icon>
+                    {{ job.filamentUsage[0] }}g <v-icon size="4.16vh" color="white">mdi-printer-3d-nozzle</v-icon
+                    ><v-icon v-if="job.filamentUsage.length > 1" size="4.16vh" color="white">mdi-numeric-0-box</v-icon>
                     <br v-if="job.filamentUsage.length > 1" />
                     <span v-if="job.filamentUsage.length > 1"
-                        >{{ job.filamentUsage[1] }}g <v-icon color="white">mdi-printer-3d-nozzle</v-icon><v-icon size="20px" color="white">mdi-numeric-1-box</v-icon></span
+                        >{{ job.filamentUsage[1] }}g <v-icon size="4.16vh" color="white">mdi-printer-3d-nozzle</v-icon><v-icon size="4.16vh" color="white">mdi-numeric-1-box</v-icon></span
                     >
                 </h3>
             </v-col>
         </v-row>
 
         <!-- Printing screen, links to UTILITIES, CANCEL, PAUSE -->
-        <div class="now-printing__details" v-if="screen == 'printing'">
-            <v-row class="now-printing__overview">
-                <v-col v-ripple @click="overlay = 'tempAdjust-hotend'" class="now-printing__overview-item">
-                    <v-row>
-                        <v-col>
-                            <v-icon size="15vh" color="#ff7675">mdi-printer-3d-nozzle</v-icon>
-                        </v-col>
-                        <v-col>
-                            <span class="now-printing__overview-text">{{ Math.round(printer.nozzle.actual) }}<span style="font-size: 20px;">°C</span></span
-                            ><br />
-                            <span class="now-printing__overview-text-small">{{ printer.nozzle.target }}°C</span>
-                        </v-col>
-                    </v-row>
-                </v-col>
-                <v-col v-ripple @click="overlay = 'tempAdjust-heatedbed'" class="now-printing__overview-item">
-                    <v-row>
-                        <v-col>
-                            <v-icon size="15vh" color="#00b894">mdi-radiator</v-icon>
-                        </v-col>
-                        <v-col>
-                            <span class="now-printing__overview-text">{{ Math.round(printer.bed.actual) }}<span style="font-size: 20px;">°C</span></span
-                            ><br /><br />
-                            <span class="now-printing__overview-text-small" style="margin-top: -20px;">{{ printer.bed.target }}°C</span>
-                        </v-col>
-                    </v-row>
-                </v-col>
-                <v-col class="now-printing__overview-item">
-                    <v-row>
-                        <v-col>
-                            <v-icon size="15vh" :class="spinning" color="#0984e3" spin>mdi-fan</v-icon>
-                        </v-col>
-                        <v-col>
-                            <span style="margin-top: 2.5vh;" class="now-printing__overview-text">{{ printer.fan.speed }}<span style="font-size: 20px;">%</span></span>
-                        </v-col>
-                    </v-row>
-                </v-col>
-            </v-row>
-            <v-row class="now-printing__overview">
-                <v-col @click="cancelDialog()" v-ripple class="now-printing__overview-item">
-                    <v-icon size="15vh" color="#ff7675">mdi-close-circle</v-icon>
-                </v-col>
-                <v-col
-                    @click="
-                        togglePause().then(function () {
-                            update()
-                        })
-                    "
-                    v-ripple
-                    class="now-printing__overview-item"
-                >
-                    <v-icon v-if="printer.state == 'Printing'" size="15vh" color="#fdcb6e">mdi-pause-circle</v-icon>
-                    <v-icon v-if="printer.state == 'Paused'" size="15vh" color="#fdcb6e">mdi-play-circle</v-icon>
-                    <v-icon v-if="printer.state == 'Pausing' || printer.state == 'Resuming'" size="15vh" color="#fdcb6e">mdi-dots-horizontal-circle</v-icon>
-                </v-col>
-                <v-col @click="screen = 'utilities'" v-ripple class="now-printing__overview-item"> <v-icon size="15vh" color="#dfe6e9">mdi-cog</v-icon><br /> </v-col>
-            </v-row>
-        </div>
+        <transition name="slide-x-transition" mode="out-in">
+            <div key="1" class="now-printing__details" v-if="screen == 'printing'">
+                <v-row class="now-printing__overview">
+                    <v-col v-ripple @click="overlay = 'tempAdjust-hotend'" class="now-printing__overview-item">
+                        <v-row>
+                            <v-col>
+                                <v-icon size="15vh" color="#ff7675">mdi-printer-3d-nozzle</v-icon>
+                            </v-col>
+                            <v-col>
+                                <span class="now-printing__overview-text">{{ Math.round(printer.nozzle.actual) }}<span style="font-size: 4.16vh;">°C</span></span
+                                ><br />
+                                <span class="now-printing__overview-text-small">{{ printer.nozzle.target }}°C</span>
+                            </v-col>
+                        </v-row>
+                    </v-col>
+                    <v-col v-ripple @click="overlay = 'tempAdjust-heatedbed'" class="now-printing__overview-item">
+                        <v-row>
+                            <v-col>
+                                <v-icon size="15vh" color="#00b894">mdi-radiator</v-icon>
+                            </v-col>
+                            <v-col>
+                                <span class="now-printing__overview-text">{{ Math.round(printer.bed.actual) }}<span style="font-size: 4.16vh;">°C</span></span
+                                ><br /><br />
+                                <span class="now-printing__overview-text-small" style="margin-top: -4.16vh;">{{ printer.bed.target }}°C</span>
+                            </v-col>
+                        </v-row>
+                    </v-col>
+                    <v-col class="now-printing__overview-item">
+                        <v-row>
+                            <v-col>
+                                <v-icon size="15vh" :class="spinning" color="#0984e3" spin>mdi-fan</v-icon>
+                            </v-col>
+                            <v-col>
+                                <span style="margin-top: 2.5vh;" class="now-printing__overview-text">{{ printer.fan.speed }}<span style="font-size: 4.16vh;">%</span></span>
+                            </v-col>
+                        </v-row>
+                    </v-col>
+                </v-row>
+                <v-row class="now-printing__overview">
+                    <v-col @click="cancelDialog()" v-ripple class="now-printing__overview-item">
+                        <v-icon size="15vh" color="#ff7675">mdi-close-circle</v-icon>
+                    </v-col>
+                    <v-col
+                        @click="
+                            togglePause().then(function () {
+                                update()
+                            })
+                        "
+                        v-ripple
+                        class="now-printing__overview-item"
+                    >
+                        <v-icon v-if="printer.state == 'Printing'" size="15vh" color="#fdcb6e">mdi-pause-circle</v-icon>
+                        <v-icon v-if="printer.state == 'Paused'" size="15vh" color="#fdcb6e">mdi-play-circle</v-icon>
+                        <v-icon v-if="printer.state == 'Pausing' || printer.state == 'Resuming'" size="15vh" color="#fdcb6e">mdi-dots-horizontal-circle</v-icon>
+                    </v-col>
+                    <v-col @click="screen = 'utilities'" v-ripple class="now-printing__overview-item"> <v-icon size="15vh" color="#dfe6e9">mdi-cog</v-icon><br /> </v-col>
+                </v-row>
+            </div>
 
-        <!-- Utility menus, collapse when not working on -->
-        <!-- these div tags are useless, only point is code folding :) -->
-        <transition name="fade">
             <!-- Main screen -->
-            <div class="now-printing__details" v-if="screen == 'utilities'">
+            <div key="2" class="now-printing__details" v-if="screen == 'utilities'">
                 <v-row class="now-printing__overview">
                     <v-col @click="screen = 'printing'" v-ripple class="now-printing__overview-item">
                         <v-icon size="15vh" color="#dfe6e9">mdi-arrow-left</v-icon><br />
@@ -147,7 +145,7 @@
             </div>
 
             <!-- Flowrate adj. screen -->
-            <div class="now-printing__details" v-if="screen == 'flowrate'">
+            <div key="3" class="now-printing__details" v-if="screen == 'flowrate'">
                 <v-row class="now-printing__overview">
                     <v-col @click="screen = 'utilities'" v-ripple class="now-printing__overview-item">
                         <v-icon size="15vh" color="#dfe6e9">mdi-arrow-left</v-icon><br />
@@ -165,7 +163,7 @@
             </div>
 
             <!-- Feedrate adj. screen -->
-            <div class="now-printing__details" v-if="screen == 'feedrate'">
+            <div key="4" class="now-printing__details" v-if="screen == 'feedrate'">
                 <v-row class="now-printing__overview">
                     <v-col @click="screen = 'utilities'" v-ripple class="now-printing__overview-item">
                         <v-icon size="15vh" color="#dfe6e9">mdi-arrow-left</v-icon><br />
@@ -187,7 +185,7 @@
         <!-- these div tags are useless, only point is code folding :) -->
         <div>
             <transition name="fade">
-                <div @click.self="overlay = ''" v-if="overlay == 'print-picture'" class="modal-container">
+                <div @click.self="overlay = ''" v-if="(overlay === 'print-picture' && job.filepath.includes('.ufp'))" class="modal-container">
                     <div class="modal-wrapper">
                         <img style="width: 35vw;" :src="ufpPreviewURL(job.filepath)" />
                     </div>
