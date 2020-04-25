@@ -81,69 +81,69 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue'
-  import {OctoprintAPI} from '../../octoprint-api/api'
-  import {config} from "../../config"
-  declare var moment
+import Vue from "vue"
+import {OctoprintAPI} from "../../octoprint-api/api"
+import {config} from "../../config"
+declare var moment
 
-  export default Vue.extend({
-    name: 'Files',
+export default Vue.extend({
+    name: "Files",
     mixins: [OctoprintAPI],
     mounted: function() {
-      this.update()
-      this.printer.name = config.printerName
-      this.updateInterval = setInterval(this.update, 2500);
+        this.update()
+        this.printer.name = config.printerName
+        this.updateInterval = setInterval(this.update, 2500)
 
-      //Retrieve files and display on page...
-      this.getFiles().then((data) => {
-        this.files = []
-        data.forEach((e,i) => {
-          this.files.push(e)
-        })
+        //Retrieve files and display on page...
+        this.getFiles().then((data) => {
+            this.files = []
+            data.forEach((e) => {
+                this.files.push(e)
+            })
         //this.openFile(this.files[1]);
-      })
+        })
     },
     methods: {
-      openFile: function(file) {
-        this.fileBeingViewed = file;
-        this.viewingFile = true;
-      },
-      formatTimeRemaining: function(remainingSeconds) {
-        return moment("2015-01-01").startOf('day')
-          .seconds(remainingSeconds)
-          .format('H:mm');
-      },
-      update: function() {
-        this.getJobStatus().then((data) => {
-          this.printer.state = data.state
-          if(data.state == "Printing" || data.state == "Starting") {
-            //this.$router.push("/now-printing");
-          }
-        })
-        this.getFiles().then((data) => {
-          this.files = []
-          data.forEach((e,i) => {
-            this.files.push(e)
-          })
-        })
-      },
-      ufpPreviewURL: function(file) {
-        return config.baseURL.replace('/api/', '') + '/plugin/UltimakerFormatPackage/thumbnail/' + file.name.replace('.ufp.gcode','.png')
-      }
+        openFile: function(file) {
+            this.fileBeingViewed = file
+            this.viewingFile = true
+        },
+        formatTimeRemaining: function(remainingSeconds) {
+            return moment("2015-01-01").startOf("day")
+                .seconds(remainingSeconds)
+                .format("H:mm")
+        },
+        update: function() {
+            this.getJobStatus().then((data) => {
+                this.printer.state = data.state
+                if(data.state == "Printing" || data.state == "Starting") {
+                    //this.$router.push("/now-printing");
+                }
+            })
+            this.getFiles().then((data) => {
+                this.files = []
+                data.forEach((e) => {
+                    this.files.push(e)
+                })
+            })
+        },
+        ufpPreviewURL: function(file) {
+            return config.baseURL.replace("/api/", "") + "/plugin/UltimakerFormatPackage/thumbnail/" + file.name.replace(".ufp.gcode",".png")
+        }
     },
     computed: {
     },
     data: function() {
-      return {
-        printer: {
-          name: "",
-          state: ""
-        },
-        freeSpace: "",
-        files: [],
-        viewingFile: false,
-        fileBeingViewed: null
-      };
+        return {
+            printer: {
+                name: "",
+                state: ""
+            },
+            freeSpace: "",
+            files: [],
+            viewingFile: false,
+            fileBeingViewed: null
+        }
     }
-  })
+})
 </script>

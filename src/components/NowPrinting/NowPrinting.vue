@@ -233,204 +233,204 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue'
-  import {OctoprintAPI} from '../../octoprint-api/api'
-  import {config} from "../../config"
-  declare var moment
-  export default Vue.extend({
-    name: 'NowPrinting',
+import Vue from "vue"
+import {OctoprintAPI} from "../../octoprint-api/api"
+import {config} from "../../config"
+declare var moment
+export default Vue.extend({
+    name: "NowPrinting",
     mixins: [OctoprintAPI],
     mounted: function() {
-      this.update()
-      this.updateInterval = setInterval(this.update, 2500);
+        this.update()
+        this.updateInterval = setInterval(this.update, 2500)
     },
     methods: {
-      formatTimeRemaining: function(remainingSeconds) {
-        return moment("2015-01-01").startOf('day')
-          .seconds(remainingSeconds)
-          .format('H:mm');
-      },
-      showDialog: function(title, actions) {
-        this.oldScreen = this.screen
-        this.screen = "dialog"
-        this.currentDialog.title = title
-        this.currentDialog.actions = actions
-      },
-      cancelDialog: function() {
-        this.showDialog("Are you sure?", [
-          {
-            text: "",
-            icon: "mdi-arrow-left",
-            color: "neutral",
-            action: () => {
-              this.screen = this.oldScreen
-              this.oldScreen = this.screen
+        formatTimeRemaining: function(remainingSeconds) {
+            return moment("2015-01-01").startOf("day")
+                .seconds(remainingSeconds)
+                .format("H:mm")
+        },
+        showDialog: function(title, actions) {
+            this.oldScreen = this.screen
+            this.screen = "dialog"
+            this.currentDialog.title = title
+            this.currentDialog.actions = actions
+        },
+        cancelDialog: function() {
+            this.showDialog("Are you sure?", [
+                {
+                    text: "",
+                    icon: "mdi-arrow-left",
+                    color: "neutral",
+                    action: () => {
+                        this.screen = this.oldScreen
+                        this.oldScreen = this.screen
+                    }
+                },
+                {
+                    text: "Cancel Print",
+                    icon: "mdi-close-circle",
+                    color: "red",
+                    action: () => {
+                        this.cancelPrint()
+                    }
+                } 
+            ])
+        },
+        ufpPreviewURL: function(file) {
+            return config.baseURL.replace("/api/", "") + "/plugin/UltimakerFormatPackage/thumbnail/" + file.replace(".ufp.gcode",".png")
+        },
+        nozzleOffset: function(temp) {
+            if(this.printer.nozzle.target + temp >= 0 && this.printer.nozzle.target + temp <= 275) {
+                this.printer.nozzle.target = this.printer.nozzle.target + temp
             }
-          },
-          {
-            text: "Cancel Print",
-            icon: "mdi-close-circle",
-            color: "red",
-            action: () => {
-              this.cancelPrint()
+            this.setNozzleTemp(this.printer.nozzle.target).then(() => {
+                this.update()
+            })
+        },
+        bedOffset: function(temp) {
+            if(this.printer.bed.target + temp >= 0 && this.printer.bed.target + temp <= 275) {
+                this.printer.bed.target = this.printer.bed.target + temp
             }
-          } 
-        ])
-      },
-      ufpPreviewURL: function(file) {
-        return config.baseURL.replace('/api/', '') + '/plugin/UltimakerFormatPackage/thumbnail/' + file.replace('.ufp.gcode','.png')
-      },
-      nozzleOffset: function(temp) {
-        if(this.printer.nozzle.target + temp >= 0 && this.printer.nozzle.target + temp <= 275) {
-          this.printer.nozzle.target = this.printer.nozzle.target + temp
-        }
-        this.setNozzleTemp(this.printer.nozzle.target).then(() => {
-          this.update()
-        });
-      },
-      bedOffset: function(temp) {
-        if(this.printer.bed.target + temp >= 0 && this.printer.bed.target + temp <= 275) {
-          this.printer.bed.target = this.printer.bed.target + temp
-        }
-        this.setBedTemp(this.printer.bed.target).then(() => {
-          this.update()
-        });
-      },
-      update: function() {
-        this.loop = this.loop + 1;
-        if(this.loop == 5) {
-          if(this.currentHeader == 1) {
-            this.currentHeader = 2;
-          } else {
-            this.currentHeader = 1;
-          }
-          this.loop = 1
-        }
-        this.getPrinterStatus().then((data) => {
-          this.printer.nozzle.target = data.temperature.tool0.target
-          this.printer.nozzle.actual = data.temperature.tool0.actual
-          this.printer.bed.target = data.temperature.bed.target
-          this.printer.bed.actual = data.temperature.bed.actual
+            this.setBedTemp(this.printer.bed.target).then(() => {
+                this.update()
+            })
+        },
+        update: function() {
+            this.loop = this.loop + 1
+            if(this.loop == 5) {
+                if(this.currentHeader == 1) {
+                    this.currentHeader = 2
+                } else {
+                    this.currentHeader = 1
+                }
+                this.loop = 1
+            }
+            this.getPrinterStatus().then((data) => {
+                this.printer.nozzle.target = data.temperature.tool0.target
+                this.printer.nozzle.actual = data.temperature.tool0.actual
+                this.printer.bed.target = data.temperature.bed.target
+                this.printer.bed.actual = data.temperature.bed.actual
 
-          if(Math.abs(this.printer.nozzle.actual - this.printer.nozzle.target) > 10 || Math.abs(this.printer.bed.actual - this.printer.bed.target) > 3) {
-            if(this.printer.nozzle.actual > this.printer.nozzle.target || this.printer.bed.actual > this.printer.bed.target) {
-              this.printer.isCooling = true;
-              this.printer.isHeating = false;
+                if(Math.abs(this.printer.nozzle.actual - this.printer.nozzle.target) > 10 || Math.abs(this.printer.bed.actual - this.printer.bed.target) > 3) {
+                    if(this.printer.nozzle.actual > this.printer.nozzle.target || this.printer.bed.actual > this.printer.bed.target) {
+                        this.printer.isCooling = true
+                        this.printer.isHeating = false
+                    } else {
+                        this.printer.isHeating = true
+                        this.printer.isCooling = false
+                    }
+                } else {
+                    this.printer.isHeating = false
+                    this.printer.isCooling = false
+                }
+            }).then(() => {
+                this.getJobStatus().then((data) => {
+                    this.printer.state = data.state
+                    if(data.state == "Operational" || data.state == "Cancelling") {
+                        this.goto("/")
+                    }
+                    this.printer.name = config.printerName
+                    if(this.printer.isHeating == true || this.printer.isCooling == true) {
+                        this.job.percentCompleted = 100
+                    } else {
+                        this.job.percentCompleted = data.progress.completion
+                    }
+                    this.job.filename = data.job.file.name
+                    this.job.filepath = data.job.file.path
+                    this.job.timeRemaining = data.progress.printTimeLeft
+                    const epochComplete = (moment().valueOf() + (this.job.timeRemaining * 1000))
+                    this.job.eta = moment(epochComplete).calendar()
+                    this.job.filamentUsage[0] = this.lengthToWeight(data.job.filament.tool0.length)
+                    if(data.job.filament.tool1 != undefined) {
+                        this.job.filamentUsage[1] = this.lengthToWeight(data.job.filament.tool1.length)
+                    }
+                })
+            })
+            this.getLayerStatus().then((data) => {
+                this.job.currentLayer = data.layer.current
+                this.job.totalLayers = data.layer.total
+                if(data.fanSpeed == "-" || data.fanSpeed == "Off") {
+                    this.printer.fan.speed = 0
+                } else {
+                    this.printer.fan.speed = parseInt(data.fanSpeed.split("%")[0])
+                }
+            })
+        },
+        goodOrBad: function(action) {
+            if(action.color == "red") {
+                return "now-printing__dialog-action-bad"
+            } else if(action.color == "green") {
+                return "now-printing__dialog-action-good"
             } else {
-              this.printer.isHeating = true;
-              this.printer.isCooling = false;
+                return "now-printing__dialog-action-neutral"
             }
-          } else {
-            this.printer.isHeating = false;
-            this.printer.isCooling = false;
-          }
-        }).then(() => {
-          this.getJobStatus().then((data) => {
-            this.printer.state = data.state
-            if(data.state == "Operational" || data.state == "Cancelling") {
-              this.goto("/");
-            }
-            this.printer.name = config.printerName
-            if(this.printer.isHeating == true || this.printer.isCooling == true) {
-              this.job.percentCompleted = 100
+        },
+        goodOrBadIcon: function(action) {
+            if(action.color == "red") {
+                return "#ff7675"
+            } else if(action.color == "green") {
+                return "#55efc4"
             } else {
-              this.job.percentCompleted = data.progress.completion
+                return "#dfe6e9"
             }
-            this.job.filename = data.job.file.name
-            this.job.filepath = data.job.file.path
-            this.job.timeRemaining = data.progress.printTimeLeft
-            const epochComplete = (moment().valueOf() + (this.job.timeRemaining * 1000))
-            this.job.eta = moment(epochComplete).calendar();
-            this.job.filamentUsage[0] = this.lengthToWeight(data.job.filament.tool0.length)
-            if(data.job.filament.tool1 != undefined) {
-              this.job.filamentUsage[1] = this.lengthToWeight(data.job.filament.tool1.length)
-            }
-          })
-        })
-        this.getLayerStatus().then((data) => {
-          this.job.currentLayer = data.layer.current
-          this.job.totalLayers = data.layer.total
-          if(data.fanSpeed == "-" || data.fanSpeed == "Off") {
-            this.printer.fan.speed = 0
-          } else {
-            this.printer.fan.speed = parseInt(data.fanSpeed.split("%")[0])
-          }
-        })
-      },
-      goodOrBad: function(action) {
-        if(action.color == "red") {
-          return "now-printing__dialog-action-bad"
-        } else if(action.color == "green") {
-          return "now-printing__dialog-action-good"
-        } else {
-          return "now-printing__dialog-action-neutral"
         }
-      },
-      goodOrBadIcon: function(action) {
-        if(action.color == "red") {
-          return "#ff7675"
-        } else if(action.color == "green") {
-          return "#55efc4"
-        } else {
-          return "#dfe6e9"
-        }
-      }
     },
     computed: {
-      pauseOrPlay: function() {
-        if(this.printer.state == "Pausing" || this.printer.state == "Paused") {
-          return "Resume Print"
-        } else {
-          return "Pause Print"
+        pauseOrPlay: function() {
+            if(this.printer.state == "Pausing" || this.printer.state == "Paused") {
+                return "Resume Print"
+            } else {
+                return "Pause Print"
+            }
+        },
+        spinning: function() {
+            if(this.printer.fan.speed > 0) {
+                return "spin"
+            } else {
+                return ""
+            }
         }
-      },
-      spinning: function() {
-        if(this.printer.fan.speed > 0) {
-          return "spin"
-        } else {
-          return ""
-        }
-      }
     },
     data: function() {
-      return {
-        loop: 0,
-        screen: "printing",
-        overlay: "",
-        oldScreen: "",
-        currentDialog: {
-          title: "",
-          actions: []
-        },
-        currentHeader: 1,
-        job: {
-          percentCompleted: 0,
-          filename: "",
-          filepath: "",
-          eta: "",
-          filamentUsage: [],
-          timeRemaining: 0,
-          currentLayer: 0,
-          totalLayers: 0
-        },
-        printer: {
-          name: "",
-          isHeating: false,
-          isCooling: false,
-          state: "",
-          nozzle: {
-            target: 0,
-            actual: 0
-          },
-          bed: {
-            target: 0,
-            actual: 0
-          },
-          fan: {
-            speed: 0
-          }
+        return {
+            loop: 0,
+            screen: "printing",
+            overlay: "",
+            oldScreen: "",
+            currentDialog: {
+                title: "",
+                actions: []
+            },
+            currentHeader: 1,
+            job: {
+                percentCompleted: 0,
+                filename: "",
+                filepath: "",
+                eta: "",
+                filamentUsage: [],
+                timeRemaining: 0,
+                currentLayer: 0,
+                totalLayers: 0
+            },
+            printer: {
+                name: "",
+                isHeating: false,
+                isCooling: false,
+                state: "",
+                nozzle: {
+                    target: 0,
+                    actual: 0
+                },
+                bed: {
+                    target: 0,
+                    actual: 0
+                },
+                fan: {
+                    speed: 0
+                }
+            }
         }
-      };
     }
-  })
+})
 </script>
