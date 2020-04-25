@@ -40,10 +40,10 @@ opacity: 0;
 }
 
 .barberpole {
-    background-image: 
+    background-image:
     repeating-linear-gradient(
-        -45deg, 
-        transparent, 
+        -45deg,
+        transparent,
         transparent 1rem,
         #E8B763 1rem,
         #E8B763 2rem
@@ -77,7 +77,7 @@ opacity: 0;
         border-radius: 20px;
         padding: 10px;
         padding-left: 15px;
-        padding-right: 15px; 
+        padding-right: 15px;
         background-color: rgba(28,35,37,0.9);
     }
 
@@ -95,7 +95,7 @@ opacity: 0;
 .container {
     background-color: #2d3436;
     overflow: hidden;
-    padding: 0px !important;
+    padding: 0 !important;
     height: 100vh;
 }
 
