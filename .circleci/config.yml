@@ -41,7 +41,7 @@ jobs:
           command: go get github.com/tcnksm/ghr
       - run: 
           name: "Deploy to GitHub"
-          command: ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} wks/dist_electron/
+          command: ghr -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME -c $CIRCLE_SHA1 $VERSION wks/dist_electron/
       - run:
           name: "What's in the workspace??"
           command: |
