@@ -1,7 +1,7 @@
-import {Config as config} from "../Config"
+import {Config as config} from "@/Mixins/Config"
 const axios = require("axios").default
 
-const OctoPrintService = {
+const OctoPrint = {
     methods: {
         //Getters
         getJobStatus: function() {
@@ -197,4 +197,4 @@ const OctoPrintService = {
         }
     }
 }
-export {OctoPrintService}
+export {OctoPrint}

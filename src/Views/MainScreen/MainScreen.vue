@@ -40,8 +40,8 @@
 
 <script lang="ts">
 import Vue from "vue"
-import {OctoPrint} from "../../Mixins/OctoPrint"
-import {Config as config} from "../../Mixins/Config"
+import {OctoPrint} from "@/Mixins/OctoPrint"
+import {Config as config} from "@/Mixins/Config"
 export default Vue.extend({
     name: "MainScreen",
     mixins: [OctoPrint],

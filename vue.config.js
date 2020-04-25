@@ -1,3 +1,5 @@
+const path = require("path")
+
 module.exports = {
     "transpileDependencies": [
         "vuetify"
@@ -20,5 +22,10 @@ module.exports = {
                 "extends": null
             }
         }
+    },
+    chainWebpack: config => {
+        config.resolve.alias
+            .set("Components", path.resolve(__dirname, "src/Components"))
+            .set("Mixins", path.resolve(__dirname, "src/Mixins"))
     }
 }

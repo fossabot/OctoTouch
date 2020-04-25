@@ -1,6 +1,8 @@
 import Vue from "vue"
 // eslint-disable-next-line no-unused-vars
 import VueRouter, { RouteConfig } from "vue-router"
+
+//Import views
 import MainScreen from "../Views/MainScreen/MainScreen.vue"
 import NowPrinting from "../Views/NowPrinting/NowPrinting.vue"
 import Control from "../Views/Control/Control.vue"

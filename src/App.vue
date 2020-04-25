@@ -15,8 +15,3 @@ export default {
     name: "App"
 }
 </script>
-<style>
-#app {
-  
-}
-</style>

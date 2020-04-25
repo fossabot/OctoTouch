@@ -95,68 +95,20 @@
         </div>
       </v-col>
     </v-row>
-
     <div>
-      <transition name="fade">
-        <div @click.self="overlay= ''" v-if="overlay == 'tempAdjust-hotend'" class="modal-container">
-          <div class="modal-wrapper">
-            <v-row>
-              <v-col v-ripple @click="nozzleOffset(1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+1</v-col>
-              <v-col></v-col>
-              <v-col v-ripple @click="nozzleOffset(10)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+10</v-col>
-            </v-row>
-            <v-row style="margin-top: 0px; margin-bottom: 0px;">
-              <v-col></v-col>
-              <v-col justify=center align=center style="color: #fff; font-size: 12vh; font-weight: 300;">{{printer.nozzle.target}}</v-col>
-              <v-col></v-col>
-            </v-row>
-            <v-row style="border-bottom: 4px solid #fff;">
-              <v-col v-ripple @click="nozzleOffset(-1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">-1</v-col>
-              <v-col></v-col>
-              <v-col v-ripple @click="nozzleOffset(-10)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">-10</v-col>
-            </v-row>
-            <v-row>
-              <v-col></v-col>
-              <v-col v-ripple @click.self="overlay= ''" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">back</v-col>
-              <v-col></v-col>
-            </v-row>
-          </div>
-        </div> 
-      </transition>
-      <transition name="fade">
-        <div @click.self="overlay= ''" v-if="overlay == 'tempAdjust-heatedbed'" class="modal-container">
-          <div class="modal-wrapper">
-            <v-row>
-              <v-col v-ripple @click="bedOffset(1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+1</v-col>
-              <v-col></v-col>
-              <v-col v-ripple @click="bedOffset(10)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">+10</v-col>
-            </v-row>
-            <v-row style="margin-top: 0px; margin-bottom: 0px;">
-              <v-col></v-col>
-              <v-col justify=center align=center style="color: #fff; font-size: 12vh; font-weight: 300;">{{printer.bed.target}}</v-col>
-              <v-col></v-col>
-            </v-row>
-            <v-row style="border-bottom: 4px solid #fff;">
-              <v-col v-ripple @click="bedOffset(-1)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">-1</v-col>
-              <v-col></v-col>
-              <v-col v-ripple @click="bedOffset(-10)" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">-10</v-col>
-            </v-row>
-            <v-row>
-              <v-col></v-col>
-              <v-col v-ripple @click.self="overlay= ''" justify=center align=center style="color: #fff; font-size: 6vh; font-weight: 300;">back</v-col>
-              <v-col></v-col>
-            </v-row>
-          </div>
-        </div>
-      </transition>
+        <transition name="fade">
+            <quick-adjust v-if="overlay=='tempAdjust-hotend'" :value="printer.nozzle.target" v-on:close="overlay=''" v-on:setValue="setNozzleTemp"></quick-adjust>
+            <quick-adjust v-if="overlay=='tempAdjust-heatedbed'" :value="printer.bed.target" v-on:close="overlay=''" v-on:setValue="setBedTemp"></quick-adjust>
+        </transition>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue"
-import {OctoPrint} from "../../Mixins/OctoPrint"
-import {Config as config} from "../../Mixins/Config"
+import {OctoPrint} from "@/Mixins/OctoPrint"
+import {Config as config} from "@/Mixins/Config"
+import QuickAdjust from "@/Components/QuickAdjust/QuickAdjust.vue"
 declare var moment
 
 export default Vue.extend({
@@ -193,22 +145,6 @@ export default Vue.extend({
                 this.printer.bed.target = data.temperature.bed.target
                 this.printer.bed.actual = data.temperature.bed.actual
             })
-        },
-        nozzleOffset: function(temp) {
-            if(this.printer.nozzle.target + temp >= 0 && this.printer.nozzle.target + temp <= 275) {
-                this.printer.nozzle.target = this.printer.nozzle.target + temp
-            }
-            this.setNozzleTemp(this.printer.nozzle.target).then(() => {
-                this.update()
-            })
-        },
-        bedOffset: function(temp) {
-            if(this.printer.bed.target + temp >= 0 && this.printer.bed.target + temp <= 275) {
-                this.printer.bed.target = this.printer.bed.target + temp
-            }
-            this.setBedTemp(this.printer.bed.target).then(() => {
-                this.update()
-            })
         }
     },
     computed: {
@@ -239,6 +175,9 @@ export default Vue.extend({
                 }
             }
         }
+    },
+    components: {
+        "quick-adjust": QuickAdjust
     }
 })
 </script>
