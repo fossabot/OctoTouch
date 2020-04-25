@@ -56,4 +56,4 @@ workflows:
       - publish-github-release:
           requires:
             - lint
-            - electron-pack
+            - electron-build
