@@ -19,7 +19,7 @@ module.exports = {
             },
         },
     },
-    chainWebpack: (config) => {
+    chainWebpack: config => {
         config.resolve.alias.set("Components", path.resolve(__dirname, "src/Components")).set("Mixins", path.resolve(__dirname, "src/Mixins"))
     },
 }

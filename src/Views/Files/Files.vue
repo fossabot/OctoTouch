@@ -31,7 +31,7 @@
                 <div v-if="file.type == 'folder'">
                     <div class="files__file-information">
                         <p class="files__file-name"><v-icon style="margin-top: -0.4vh;" color="#fff" size="30px">mdi-folder</v-icon> {{ file.name }}</p>
-                        <div class="files__file-details">{{(file.children)}}<span class="files__file-details-small">items</span></div>
+                        <div class="files__file-details">{{ file.children }}<span class="files__file-details-small">items</span></div>
                     </div>
                 </div>
             </div>
@@ -50,7 +50,9 @@
                             <img :src="ufpPreviewURL(fileBeingViewed)" />
                         </div>
                         <div class="files__file-information">
-                            <p class="files__file-popup__name">{{ fileBeingViewed.name.replace("ADMFOR25EX_", "").replace(".ufp", "").replace(".gcode", "") }}</p>
+                            <p class="files__file-popup__name">
+                                {{ fileBeingViewed.name.replace("ADMFOR25EX_", "").replace(".ufp", "").replace(".gcode", "") }}
+                            </p>
                             <div class="files__file-popup__stats">
                                 <div class="files__file-popup__stat">{{ (fileBeingViewed.size / 1000000).toFixed(1) }}<span class="files__file-popup__stat-small">mb</span></div>
                                 <div class="files__file-popup__stat">
