@@ -41,7 +41,7 @@ jobs:
           command: go get github.com/tcnksm/ghr
       - run: 
           name: "Deploy to GitHub"
-          command: ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./wks/dist_electron/*.deb
+          command: ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} wks/dist_electron/
       - run:
           name: "What's in the workspace??"
           command: |
@@ -55,16 +55,16 @@ workflows:
       - electron-build:
           requires:
             - lint
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^\d+\.\d+\.\d+$/
+#          filters:
+#            branches:
+#              ignore: /.*/
+#            tags:
+#              only: /^\d+\.\d+\.\d+$/
       - publish-github-release:
           requires:
             - electron-build
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^\d+\.\d+\.\d+$/
+#          filters:
+#            branches:
+#              ignore: /.*/
+#            tags:
+#              only: /^\d+\.\d+\.\d+$/
