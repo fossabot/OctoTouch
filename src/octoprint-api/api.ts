@@ -177,9 +177,6 @@ const OctoprintAPI = {
             )
         },
         goto: function(url: any) {
-            if(this.screenTimeout != undefined) {
-                clearTimeout(this.screenTimeout)
-            }
             if(this.updateInterval != undefined) {
                 clearInterval(this.updateInterval)
             }
