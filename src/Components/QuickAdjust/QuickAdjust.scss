@@ -11,7 +11,13 @@
         color: #fff;
         font-size: 8vh;
         font-weight: 300;
-        margin-top: -2vh;
+        @media(min-height: 400px) {
+            margin-top: -1vh;
+            font-size: 10vh;
+        }
+        @media(max-height: 400px) {
+            margin-top: -3.5vh;
+        }
     }
 
     &__modal {
@@ -30,7 +36,12 @@
             color: #fff;
             z-index: 12;
             margin: auto;
-            width: 40vw;
+            @media(max-height: 400px) {
+                width: 45vw;
+            }
+            @media(min-height: 400px) {
+                width: 40vw;
+            }
             height: 70vh;
             border-radius: 20px;
             padding: 2.08vh;

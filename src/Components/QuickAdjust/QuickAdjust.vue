@@ -12,7 +12,7 @@
             </v-row>
             <v-row>
                 <v-col></v-col>
-                <v-col justify="center" align="center" style="color: #fff; font-size: 12vh; line-height: 12vh; font-weight: 300;">{{ setPoint }}</v-col>
+                <v-col justify="center" align="center" style="color: #fff; font-size: 12vh; line-height: 13vh; font-weight: 300;">{{ setPoint }}</v-col>
                 <v-col></v-col>
             </v-row>
             <v-row style="border-bottom: 4px solid #fff;">

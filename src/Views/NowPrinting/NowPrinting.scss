@@ -63,7 +63,7 @@
         top: 11vh;
         position: absolute;
         z-index: 0;
-        height: 30vh;
+        height: 31vh;
         background-color: #fdcb6e;
         border-top-right-radius: 1vh;
         border-bottom-right-radius: 1vh;
@@ -83,7 +83,13 @@
         z-index: 2;
         margin-left: 5vw;
         margin-right: 5vw;
-        margin-top: 3.125vh;
+
+        @media(max-height: 400px) {
+            margin-top: 2vh;
+        }
+        @media(min-height: 400px) {
+            margin-top: 3.125vh;
+        }
 
         &-title {
             color: white;
@@ -132,7 +138,9 @@
     }
 
     &__overview {
-        margin-top: 5vh;
+        @media(min-height: 400px) {
+            margin-top: 5vh;
+        }
 
         &-item {
             z-index: 2;
