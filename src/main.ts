@@ -47,6 +47,7 @@ new Vue({
     },
     methods: {
         parseSocketMessage: function(SocketMessage) {
+            console.log(SocketMessage)
             if(SocketMessage.plugin != undefined) {
                 if(SocketMessage.plugin.plugin === "DisplayLayerProgress-websocket-payload") {
                     this.parseDisplayLayerProgressMessage(SocketMessage.plugin)
