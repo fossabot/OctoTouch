@@ -4,8 +4,10 @@ import AppRouter from "./Router"
 import vuetify from "./Plugins/vuetify"
 import Notifications from "vue-notification"
 import {Config as config} from "@/Mixins/Config"
+import {Helpers} from "@/Mixins/Helpers"
 
 const axios = require("axios").default
+const moment = require("moment")
 
 Vue.use(vuetify)
 Vue.use(Notifications)
@@ -21,6 +23,7 @@ const router = AppRouter
 new Vue({
     router,
     vuetify,
+    mixins: [Helpers],
     mounted: function() {
         this.printer.name = config.printerName
 
@@ -33,6 +36,7 @@ new Vue({
                     auth: LoginResponse.data.name + ":" + LoginResponse.data.session
                 }
                 ws.send(JSON.stringify(AuthMessage))
+                this.socketConnection.authed = true
             }
 
             ws.onmessage = (MessageEvent) => {
@@ -63,15 +67,49 @@ new Vue({
             }
         },
         parseCurrentStateMessage: function(SocketMessage) {
-            console.log(SocketMessage)
+            this.printer.state = SocketMessage.state.text
+            if(SocketMessage.temps.length > 0) {
+                const TempArray = SocketMessage.temps[SocketMessage.temps.length - 1]
+                this.printer.nozzle.target = TempArray.tool0.target
+                this.printer.nozzle.actual = TempArray.tool0.actual
+                this.printer.bed.target = TempArray.bed.target
+                this.printer.bed.actual = TempArray.bed.actual
+
+                if (Math.abs(this.printer.nozzle.actual - this.printer.nozzle.target) > 10 || Math.abs(this.printer.bed.actual - this.printer.bed.target) > 3) {
+                    this.printer.isHeating = true
+                } else {
+                    this.printer.isHeating = false
+                    this.printer.isCooling = false
+                }
+            }
+
+            if(SocketMessage.job != undefined) {
+                if(SocketMessage.job != {}) {
+                    const JobState = SocketMessage.job
+
+                    if (this.printer.isHeating == true || this.printer.isCooling == true) {
+                        this.job.percentCompleted = 100
+                    } else {
+                        this.job.percentCompleted = SocketMessage.progress.completion
+                    }
+
+                    this.job.filename = JobState.file.name
+                    this.job.filepath = JobState.file.path
+                    this.job.timeRemaining = SocketMessage.progress.printTimeLeft
+                    const epochComplete = moment().valueOf() + this.job.timeRemaining * 1000
+                    this.job.eta = moment(epochComplete).calendar()
+                    this.job.filamentUsage[0] = this.lengthToWeight(JobState.filament.tool0.length)
+                    if (JobState.filament.tool1 != undefined) {
+                        this.job.filamentUsage[1] = this.lengthToWeight(JobState.filament.tool1.length)
+                    }
+                }
+            }
         }
     },
     data: () => {
         return {
             socketConnection: {
-                authed: 0,
-                token: "",
-                sock: {} //SockJS object (JIC)
+                authed: false
             },
             job: {
                 percentCompleted: 0,
