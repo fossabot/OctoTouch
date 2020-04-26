@@ -1,0 +1,33 @@
+.utilities {
+    &__row {
+        height: 45vh !important;
+    }
+    
+    &__item {
+        padding-top: 10vh !important;
+        text-align: center;
+        color: #fff;
+        height: 100%;
+        &-title {
+            font-size: 6.33vh;
+            margin-top: .625vw;
+            text-transform: lowercase;
+            font-family: "Montserrat";
+            font-weight: 500;
+        }
+        &-icon {
+            width: 10vw;
+            height: 10vw;
+            color: #fff;
+            z-index: 2;
+        }
+        &-ribbon {
+            transform: rotate(45deg);
+            background-color: #e17055;
+            padding-top: 0.5vw;
+            padding-bottom: 0.5vw;
+            padding-right: 5vw;
+            padding-left: 5vw;
+        }
+    }
+}

@@ -99,8 +99,8 @@
         </v-row>
         <div>
             <transition name="fade">
-                <quick-adjust v-if="overlay == 'tempAdjust-hotend'" :value="printer.nozzle.target" v-on:close="overlay = ''" v-on:setValue="setNozzleTemp"></quick-adjust>
-                <quick-adjust v-if="overlay == 'tempAdjust-heatedbed'" :value="printer.bed.target" v-on:close="overlay = ''" v-on:setValue="setBedTemp"></quick-adjust>
+                <quick-adjust enableOff="true" v-if="overlay == 'tempAdjust-hotend'" :value="printer.nozzle.target" v-on:close="overlay = ''" v-on:setValue="setNozzleTemp"></quick-adjust>
+                <quick-adjust enableOff="true" v-if="overlay == 'tempAdjust-heatedbed'" :value="printer.bed.target" v-on:close="overlay = ''" v-on:setValue="setBedTemp"></quick-adjust>
             </transition>
         </div>
     </div>
@@ -111,20 +111,17 @@ import Vue from "vue"
 import { OctoPrint } from "@/Mixins/OctoPrint"
 import { Config as config } from "@/Mixins/Config"
 import QuickAdjust from "@/Components/QuickAdjust/QuickAdjust.vue"
-const moment = require("moment")
+import { Helpers } from "@/Mixins/Helpers"
 
 export default Vue.extend({
     name: "Control",
-    mixins: [OctoPrint],
+    mixins: [OctoPrint, Helpers],
     mounted: function () {
         this.update()
         this.printer.name = config.printerName
         this.updateInterval = setInterval(this.update, 2000)
     },
     methods: {
-        formatTimeRemaining: function (remainingSeconds) {
-            return moment("2015-01-01").startOf("day").seconds(remainingSeconds).format("H:mm")
-        },
         update: function () {
             this.getJobStatus().then((data) => {
                 this.printer.state = data.state

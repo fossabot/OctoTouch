@@ -98,11 +98,11 @@
 import Vue from "vue"
 import { OctoPrint } from "@/Mixins/OctoPrint"
 import { Config as config } from "@/Mixins/Config"
-const moment = require("moment")
+import { Helpers } from "@/Mixins/Helpers"
 
 export default Vue.extend({
     name: "Files",
-    mixins: [OctoPrint],
+    mixins: [OctoPrint, Helpers],
     mounted: function () {
         this.update()
         this.printer.name = config.printerName
@@ -122,9 +122,7 @@ export default Vue.extend({
             this.fileBeingViewed = file
             this.viewingFile = true
         },
-        formatTimeRemaining: function (remainingSeconds) {
-            return moment("2015-01-01").startOf("day").seconds(remainingSeconds).format("HH:mm")
-        },
+
         update: function () {
             this.getJobStatus().then((data) => {
                 this.printer.state = data.state
@@ -138,9 +136,6 @@ export default Vue.extend({
                     this.files.push(e)
                 })
             })
-        },
-        ufpPreviewURL: function (file) {
-            return config.baseURL.replace("/api/", "") + "/plugin/UltimakerFormatPackage/thumbnail/" + file.name.replace(".ufp.gcode", ".png")
         },
     },
     computed: {},

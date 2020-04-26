@@ -127,12 +127,12 @@
                         <v-icon size="15vh" color="#dfe6e9">mdi-arrow-left</v-icon><br />
                         <span style="color: #dfe6e9;">Back</span>
                     </v-col>
-                    <v-col @click="screen = 'flowrate'" v-ripple class="now-printing__overview-item">
-                        <v-icon size="15vh" color="#dfe6e9">mdi-cog-clockwise</v-icon><br />
-                        <span style="color: #dfe6e9;">Adjust Flowrate</span>
+                    <v-col @click="overlay = 'adjust-flowrate'" v-ripple class="now-printing__overview-item">
+                        <v-icon size="15vh" color="#dfe6e9">mdi-printer-3d-nozzle</v-icon><br />
+                        <span style="color: #dfe6e9;">Nozzle Flow</span>
                     </v-col>
-                    <v-col @click="screen = 'feedrate'" v-ripple class="now-printing__overview-item">
-                        <v-icon size="15vh" color="#dfe6e9">mdi-speedometer</v-icon><br />
+                    <v-col @click="overlay = 'adjust-feedrate'" v-ripple class="now-printing__overview-item">
+                        <v-icon size="15vh" color="#dfe6e9">mdi-speedometer-slow</v-icon><br />
                         <span style="color: #dfe6e9;">Print Speed</span>
                     </v-col>
                 </v-row>
@@ -140,42 +140,6 @@
                     <v-col @click="emergencyStop()" v-ripple class="now-printing__overview-item">
                         <v-icon size="15vh" color="#ff7675">mdi-stop-circle</v-icon><br />
                         <span style="color: #ff7675;">Emergency Stop</span>
-                    </v-col>
-                </v-row>
-            </div>
-
-            <!-- Flowrate adj. screen -->
-            <div key="3" class="now-printing__details" v-if="screen == 'flowrate'">
-                <v-row class="now-printing__overview">
-                    <v-col @click="screen = 'utilities'" v-ripple class="now-printing__overview-item">
-                        <v-icon size="15vh" color="#dfe6e9">mdi-arrow-left</v-icon><br />
-                        <span style="color: #dfe6e9;">Back</span>
-                    </v-col>
-                    <v-col @click="screen = 'feedrate'" v-ripple class="now-printing__overview-item">
-                        <v-icon size="15vh" color="#dfe6e9">mdi-speedometer</v-icon><br />
-                        <span style="color: #dfe6e9;">Bump Down</span>
-                    </v-col>
-                    <v-col @click="screen = 'flowrate'" v-ripple class="now-printing__overview-item">
-                        <v-icon size="15vh" color="#dfe6e9">mdi-cog-clockwise</v-icon><br />
-                        <span style="color: #dfe6e9;">Bump Up</span>
-                    </v-col>
-                </v-row>
-            </div>
-
-            <!-- Feedrate adj. screen -->
-            <div key="4" class="now-printing__details" v-if="screen == 'feedrate'">
-                <v-row class="now-printing__overview">
-                    <v-col @click="screen = 'utilities'" v-ripple class="now-printing__overview-item">
-                        <v-icon size="15vh" color="#dfe6e9">mdi-arrow-left</v-icon><br />
-                        <span style="color: #dfe6e9;">Back</span>
-                    </v-col>
-                    <v-col @click="screen = 'feedrate'" v-ripple class="now-printing__overview-item">
-                        <v-icon size="15vh" color="#dfe6e9">mdi-cog-counterclockwise</v-icon><br />
-                        <span style="color: #dfe6e9;">Bump Down</span>
-                    </v-col>
-                    <v-col @click="screen = 'flowrate'" v-ripple class="now-printing__overview-item">
-                        <v-icon size="15vh" color="#dfe6e9">mdi-cog-clockwise</v-icon><br />
-                        <span style="color: #dfe6e9;">Bump Up</span>
                     </v-col>
                 </v-row>
             </div>
@@ -190,8 +154,10 @@
                         <img style="width: 35vw;" :src="ufpPreviewURL(job.filepath)" />
                     </div>
                 </div>
-                <quick-adjust v-if="overlay == 'tempAdjust-hotend'" :value="printer.nozzle.target" v-on:close="overlay = ''" v-on:setValue="setNozzleTemp"></quick-adjust>
-                <quick-adjust v-if="overlay == 'tempAdjust-heatedbed'" :value="printer.bed.target" v-on:close="overlay = ''" v-on:setValue="setBedTemp"></quick-adjust>
+                <quick-adjust v-if="overlay == 'adjust-feedrate'" :value="printer.nozzle.feedrate" append="%" v-on:close="overlay = ''" v-on:setValue="feedrateCallback"></quick-adjust>
+                <quick-adjust v-if="overlay == 'adjust-flowrate'" :value="printer.nozzle.flowrate" append="%" v-on:close="overlay = ''" v-on:setValue="flowrateCallback"></quick-adjust>
+                <quick-adjust v-if="overlay == 'tempAdjust-hotend'" enableOff="false" :value="printer.nozzle.target" append="" v-on:close="overlay = ''" v-on:setValue="setNozzleTemp"></quick-adjust>
+                <quick-adjust v-if="overlay == 'tempAdjust-heatedbed'" enableOff="false" :value="printer.bed.target" append="" v-on:close="overlay = ''" v-on:setValue="setBedTemp"></quick-adjust>
                 <div class="now-printing__details now-printing__dialog" v-if="screen == 'dialog'">
                     <h1 class="now-printing__dialog-title">{{ currentDialog.title }}</h1>
                     <v-row class="now-printing__dialog-actions">
@@ -212,18 +178,28 @@ import Vue from "vue"
 import { OctoPrint } from "@/Mixins/OctoPrint"
 import { Config as config } from "@/Mixins/Config"
 import QuickAdjust from "@/Components/QuickAdjust/QuickAdjust.vue"
+import { Helpers } from "@/Mixins/Helpers"
+
+//Moment still required bc of ETA string
 const moment = require("moment")
 
 export default Vue.extend({
     name: "NowPrinting",
-    mixins: [OctoPrint],
+    mixins: [OctoPrint, Helpers],
     mounted: function () {
         this.update()
         this.updateInterval = setInterval(this.update, 2500)
     },
     methods: {
-        formatTimeRemaining: function (remainingSeconds) {
-            return moment("2015-01-01").startOf("day").seconds(remainingSeconds).format("H:mm")
+        flowrateCallback: function(flowrate) {
+            this.setFlowrate(flowrate).then(() => {
+                this.printer.nozzle.flowrate = flowrate
+            })
+        },
+        feedrateCallback: function(feedrate) {
+            this.setFeedrate(feedrate).then(() => {
+                this.printer.nozzle.feedrate = feedrate
+            })
         },
         showDialog: function (title, actions) {
             this.oldScreen = this.screen
@@ -251,25 +227,6 @@ export default Vue.extend({
                     },
                 },
             ])
-        },
-        ufpPreviewURL: function (file) {
-            return config.baseURL.replace("/api/", "") + "/plugin/UltimakerFormatPackage/thumbnail/" + file.replace(".ufp.gcode", ".png")
-        },
-        nozzleOffset: function (temp) {
-            if (this.printer.nozzle.target + temp >= 0 && this.printer.nozzle.target + temp <= 275) {
-                this.printer.nozzle.target = this.printer.nozzle.target + temp
-            }
-            this.setNozzleTemp(this.printer.nozzle.target).then(() => {
-                this.update()
-            })
-        },
-        bedOffset: function (temp) {
-            if (this.printer.bed.target + temp >= 0 && this.printer.bed.target + temp <= 275) {
-                this.printer.bed.target = this.printer.bed.target + temp
-            }
-            this.setBedTemp(this.printer.bed.target).then(() => {
-                this.update()
-            })
         },
         update: function () {
             this.loop = this.loop + 1
@@ -392,6 +349,8 @@ export default Vue.extend({
                 nozzle: {
                     target: 0,
                     actual: 0,
+                    flowrate: 100,
+                    feedrate: 100
                 },
                 bed: {
                     target: 0,

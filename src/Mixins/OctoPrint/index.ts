@@ -119,6 +119,18 @@ const OctoPrint = {
                     })
             })
         },
+        sendRawGcode: function (gcode: string) {
+            return new Promise(function (resolve, reject) {
+                axios
+                    .post(config.baseURL + "printer/command", { commands: gcode.split(";") }, { headers: { "X-Api-Key": config.key } })
+                    .then(function (response: { data: unknown }) {
+                        resolve(response.data)
+                    })
+                    .catch(function (error: any) {
+                        reject(error)
+                    })
+            })
+        },
         setFlowrate: function (flowrate: number) {
             return new Promise(function (resolve, reject) {
                 if (flowrate == 100) {
@@ -207,25 +219,6 @@ const OctoPrint = {
                         reject(error)
                     })
             })
-        },
-
-        //Helper functions
-        lengthToWeight: function (length: number) {
-            return Math.round((Math.PI * (config.filamentThickness / 2) * length * config.filamentDensity) / 100) / 10
-        },
-        goto: function (url: any) {
-            if (this.updateInterval != undefined) {
-                clearInterval(this.updateInterval)
-            }
-            this.$router.push(url)
-        },
-        formatFileName: function (name: string) {
-            if (config.cura == true) {
-                //Cura places a machine identifier at the start of the file name appended by an underscore.
-                return name.split("_").splice(1).join("_").replace(".ufp", "").replace(".gcode", "").replace(/_/g, " ")
-            } else {
-                return name.replace(".ufp", "").replace(".gcode", "").replace(/_/g, " ")
-            }
         },
     },
     data: function () {

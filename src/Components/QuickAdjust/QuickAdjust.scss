@@ -20,6 +20,13 @@
         }
     }
 
+    &__last-row {
+        @media(max-width: 480px) {
+            margin-left: -2vw;
+            margin-right: -2vw;
+        }
+    }
+
     &__modal {
         &-container {
             display: flex;
