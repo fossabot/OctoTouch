@@ -43,7 +43,7 @@
 import Vue from "vue"
 import { OctoPrint } from "@/Mixins/OctoPrint"
 import { Config as config } from "@/Mixins/Config"
-// eslint-disable-next-line no-undef-vars
+// eslint-disable-next-line no-undef
 import { Helpers } from "@/Mixins/Helpers"
 
 export default Vue.extend({
