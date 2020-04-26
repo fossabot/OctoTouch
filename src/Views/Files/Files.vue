@@ -12,7 +12,7 @@
                 <v-icon size="8.33vh" color="#fff">mdi-folder-multiple</v-icon>
             </v-col>
             <v-col class="header-item header-padded-item">
-                <span>{{ printer.name }}</span>
+                <span>{{ $root.printer.name }}</span>
             </v-col>
         </v-row>
 
@@ -104,10 +104,6 @@ export default Vue.extend({
     name: "Files",
     mixins: [OctoPrint, Helpers],
     mounted: function () {
-        this.update()
-        this.printer.name = config.printerName
-        this.updateInterval = setInterval(this.update, 2500)
-
         //Retrieve files and display on page...
         this.getFiles().then((data) => {
             this.files = []
@@ -117,34 +113,28 @@ export default Vue.extend({
             //this.openFile(this.files[1]);
         })
     },
+    watch: {
+        "$root.printer.state": function(newState) {
+            if (newState == "Disconnected") {
+                this.goto("/asleep")
+            }
+            if (newState == "Printing") {
+                this.goto("/now-printing")
+            }
+        }
+    },
     methods: {
         openFile: function (file) {
             this.fileBeingViewed = file
             this.viewingFile = true
         },
-
-        update: function () {
-            this.getJobStatus().then((data) => {
-                this.printer.state = data.state
-                if (data.state == "Printing" || data.state == "Starting") {
-                    //this.$router.push("/now-printing");
-                }
-            })
-            this.getFiles().then((data) => {
-                this.files = []
-                data.forEach((e) => {
-                    this.files.push(e)
-                })
-            })
+        ufpPreviewURL: function (file) {
+            return config.baseURL.replace("/api/", "") + "/plugin/UltimakerFormatPackage/thumbnail/" + file.name.replace(".ufp.gcode", ".png")
         },
     },
     computed: {},
     data: function () {
         return {
-            printer: {
-                name: "",
-                state: "",
-            },
             freeSpace: "",
             files: [],
             viewingFile: false,
