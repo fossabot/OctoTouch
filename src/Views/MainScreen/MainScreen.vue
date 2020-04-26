@@ -43,9 +43,11 @@
 import Vue from "vue"
 import { OctoPrint } from "@/Mixins/OctoPrint"
 import { Config as config } from "@/Mixins/Config"
+import { Helpers } from "@/Mixins/Helpers"
+
 export default Vue.extend({
     name: "MainScreen",
-    mixins: [OctoPrint],
+    mixins: [OctoPrint, Helpers],
     mounted: function () {
         this.printer.name = config.printerName
         this.update()
@@ -58,6 +60,9 @@ export default Vue.extend({
         update: function () {
             this.getPrinterStatus().then((data) => {
                 this.printer.state = data.state.text
+                if (data.state == "Disconnected") {
+                    this.goto("/asleep")
+                }
                 if (data.state.text == "Printing") {
                     this.goto("/now-printing")
                 }

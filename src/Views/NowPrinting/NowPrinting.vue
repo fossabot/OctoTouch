@@ -193,11 +193,21 @@ export default Vue.extend({
     methods: {
         flowrateCallback: function(flowrate) {
             this.setFlowrate(flowrate).then(() => {
+                this.$notify({
+                    group: "global",
+                    title: "Flowrate modified",
+                    text: "Flowrate was set to " + flowrate + "%"
+                })
                 this.printer.nozzle.flowrate = flowrate
             })
         },
         feedrateCallback: function(feedrate) {
             this.setFeedrate(feedrate).then(() => {
+                this.$notify({
+                    group: "global",
+                    title: "Feedrate modified",
+                    text: "Feedrate was set to " + feedrate + "%"
+                })
                 this.printer.nozzle.feedrate = feedrate
             })
         },
@@ -255,6 +265,9 @@ export default Vue.extend({
                 .then(() => {
                     this.getJobStatus().then((data) => {
                         this.printer.state = data.state
+                        if (data.state == "Disconnected") {
+                            this.goto("/asleep")
+                        }
                         if (data.state == "Operational" || data.state == "Cancelling") {
                             this.goto("/")
                         }

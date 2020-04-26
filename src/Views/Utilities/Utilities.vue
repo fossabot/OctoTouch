@@ -66,6 +66,9 @@ export default Vue.extend({
                 if (data.state.text == "Printing") {
                     //this.goto("/now-printing")
                 }
+                if (data.state == "Disconnected") {
+                    this.goto("/asleep")
+                }
                 this.printer.nozzle.actual = data.temperature.tool0.actual
                 this.printer.bed.actual = data.temperature.bed.actual
             })

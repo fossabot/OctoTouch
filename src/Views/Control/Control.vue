@@ -128,6 +128,9 @@ export default Vue.extend({
                 if (data.state == "Printing" || data.state == "Starting") {
                     this.$router.push("/now-printing")
                 }
+                if (data.state == "Disconnected") {
+                    this.goto("/asleep")
+                }
             })
             this.getLayerStatus().then((data) => {
                 if (data.fanSpeed == "-" || data.fanSpeed == "Off") {
