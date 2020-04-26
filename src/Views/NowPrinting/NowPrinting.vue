@@ -198,7 +198,7 @@ export default Vue.extend({
                     title: "Flowrate modified",
                     text: "Flowrate was set to " + flowrate + "%"
                 })
-                this.printer.nozzle.flowrate = flowrate
+                this.$root.printer.nozzle.flowrate = flowrate
             })
         },
         feedrateCallback: function(feedrate) {
@@ -208,7 +208,7 @@ export default Vue.extend({
                     title: "Feedrate modified",
                     text: "Feedrate was set to " + feedrate + "%"
                 })
-                this.printer.nozzle.feedrate = feedrate
+                this.$root.printer.nozzle.feedrate = feedrate
             })
         },
         showDialog: function (title, actions) {
@@ -349,36 +349,7 @@ export default Vue.extend({
                 title: "",
                 actions: [],
             },
-            currentHeader: 1,
-            job: {
-                percentCompleted: 0,
-                filename: "",
-                filepath: "",
-                eta: "",
-                filamentUsage: [],
-                timeRemaining: 0,
-                currentLayer: 0,
-                totalLayers: 0,
-            },
-            printer: {
-                name: "",
-                isHeating: false,
-                isCooling: false,
-                state: "",
-                nozzle: {
-                    target: 0,
-                    actual: 0,
-                    flowrate: 100,
-                    feedrate: 100
-                },
-                bed: {
-                    target: 0,
-                    actual: 0,
-                },
-                fan: {
-                    speed: 0,
-                },
-            },
+            currentHeader: 1
         }
     },
     components: {
