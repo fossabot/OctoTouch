@@ -233,7 +233,13 @@ export default Vue.extend({
                     icon: "mdi-close-circle",
                     color: "red",
                     action: () => {
-                        this.cancelPrint()
+                        this.$notify({
+                            group: "global",
+                            title: "Print cancelled",
+                            text: "The current print was cancelled",
+                            type: "error"
+                        })
+                        this.cancelPrint().then()
                     },
                 },
             ])
