@@ -21,9 +21,6 @@ const Helpers = {
         },
         formatTimeRemaining: function (remainingSeconds) {
             return moment("2015-01-01").startOf("day").seconds(remainingSeconds).format("H:mm")
-        },
-        ufpPreviewURL: function (file) {
-            return config.baseURL.replace("/api/", "") + "/plugin/UltimakerFormatPackage/thumbnail/" + file.name.replace(".ufp.gcode", ".png")
         }
     }
 }
