@@ -125,7 +125,7 @@ new Vue({
                 name: "",
                 isHeating: false,
                 isCooling: false,
-                state: "",
+                state: "Connecting...",
                 nozzle: {
                     target: 0,
                     actual: 0,

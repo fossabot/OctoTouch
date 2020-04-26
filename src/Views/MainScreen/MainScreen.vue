@@ -48,27 +48,19 @@ import { Helpers } from "@/Mixins/Helpers"
 export default Vue.extend({
     name: "MainScreen",
     mixins: [OctoPrint, Helpers],
-    mounted: function () {
-        this.update()
-        this.updateInterval = setInterval(this.update, 2500)
-    },
-    methods: {
-        resetTimeout: function () {
-            return 1
-        },
-        update: function () {
-            if (this.$root.printer.state == "Disconnected") {
-                this.goto("/asleep")
-            }
-            if (this.$root.printer.state == "Printing") {
-                this.goto("/now-printing")
-            }
-        },
-    },
     data: function () {
         return {
-            screenTimeout: null
         }
     },
+    watch: {
+        "$root.printer.state": function(newState) {
+            if (newState == "Disconnected") {
+                this.goto("/asleep")
+            }
+            if (newState == "Printing") {
+                this.goto("/now-printing")
+            }
+        }
+    }
 })
 </script>
