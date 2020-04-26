@@ -9,7 +9,7 @@
         color: #fff;
         height: 100%;
         &-title {
-            font-size: 6.33vh;
+            font-size: 8.33vh;
             margin-top: .625vw;
             text-transform: lowercase;
             font-family: "Montserrat";
@@ -19,8 +19,8 @@
             width: 10vw;
             height: 10vw;
             color: #fff;
-            z-index: 2;
         }
+
         &-ribbon {
             transform: rotate(45deg);
             background-color: #e17055;
