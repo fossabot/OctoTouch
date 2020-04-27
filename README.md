@@ -11,12 +11,17 @@
 </p>
 
 ## Contributing
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Facvigue%2FOctoTouch.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Facvigue%2FOctoTouch?ref=badge_shield)
+
 
 See [CONTRIBUTING.md](https://github.com/acvigue/OctoTouch/blob/master/CONTRIBUTING.md).
 
 ## License
 
 The project is licensed under the GNU General Public License Version 3. [More Information](https://github.com/acvigue/OctoTouch/blob/master/LICENSE.md).
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Facvigue%2FOctoTouch.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Facvigue%2FOctoTouch?ref=badge_large)
 
 ## Attribution
 This project was _heavily_ inspired by [OctoDash](https://github.com/UnchartedBull/OctoDash)
